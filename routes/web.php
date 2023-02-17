@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GraduatePartyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('/admin/dashboard', [GraduatePartyController::class, 'index'])->name('dashboard');
+    Route::get('/admin/escuelas', [\App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
+    Route::post('store/school', [\App\Http\Controllers\SchoolsController::class, 'storeSchool'])->name('store.school');
+
+});
+
 
 require __DIR__.'/auth.php';

@@ -23,9 +23,10 @@ class CreateEgresadosTable extends Migration
             $table->date('fecha');
             $table->date('fecha_pago');
             $table->unsignedBigInteger('forma_pago');
-            $table->boolean('status');
+            $table->boolean('status')->default(1);
+            $table->boolean('esta_pago')->default(0);
             $table->string('slug');
-            $table->integer('total');
+            $table->integer('total')->nullable();
             $table->timestamps();
         });
     }
