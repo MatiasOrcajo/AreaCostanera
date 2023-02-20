@@ -78,7 +78,7 @@
             "processing": true,
             "ajax": url,
             columnDefs: [{
-                "defaultContent": "-asda",
+                "defaultContent": "-",
                 "targets": "_all"
             }],
             "columns": [
@@ -92,7 +92,7 @@
                     "render": function ( data, type, full, meta ) {
                         let id = full.id;
                         console.log(full);
-                        return '<a title="Seleccione" onclick="selec_equipmen('+id+');"> <i class="fa fa-bullseye"></i> </a>';
+                        return `<a title="Ver escuela" href="${Constants.BASE_URL}admin/escuela/${id}"> <i class="fa-solid fa-eye"></i> </a>`;
                     }
                 },
             ]

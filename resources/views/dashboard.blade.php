@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="forma_pago_id" class="form-label">Menú elegido:</label>
+                            <label for="forma_pago_id" class="form-label">Forma de Pago:</label>
                             <select id="forma_pago_id" class="form-select" name="forma_pago_id">
                                 <option selected="true" disabled="disabled">Seleccionar forma de pago</option>
                                 @if(isset($menus))

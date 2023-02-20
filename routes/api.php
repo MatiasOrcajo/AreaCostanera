@@ -15,3 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('schools', [\App\Http\Controllers\SchoolsController::class, 'listSchools'])->name('list.schools');
+
+Route::get('days', [\App\Http\Controllers\DaysController::class, 'listDays'])->name('list.days');
+
+Route::get('menus', [\App\Http\Controllers\MenuController::class, 'listMenus'])->name('list.menus');

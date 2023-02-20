@@ -336,7 +336,7 @@ return [
                 [
                     'text' => 'Editar Menús',
                     'icon' => 'fa-solid fa-utensils',
-                    'url'  => '#',
+                    'url'  => '/admin/menus',
                 ],
                 [
                     'text'    => 'Editar Formas de Pago',
@@ -346,7 +346,7 @@ return [
                 [
                     'text' => 'Editar Días de Eventos',
                     'icon' => 'fa-regular fa-calendar-days',
-                    'url'  => '#',
+                    'url'  => '/admin/dias',
                 ],
                 [
                     'text' => 'Editar Menús Especiales',

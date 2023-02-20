@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGraduatePartyRequest;
+use App\Models\Dia;
 use App\Models\Egresados;
+use App\Models\Escuela;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -13,8 +16,11 @@ class GraduatePartyController extends Controller
     public function index()
     {
         $graduateParties = Egresados::all();
+        $escuelas = Escuela::all();
+        $dias = Dia::all();
+        $menus = Menu::all();
 
-        return view('dashboard', compact('graduateParties'));
+        return view('dashboard', compact('graduateParties', 'escuelas', 'dias', 'menus'));
     }
 
 

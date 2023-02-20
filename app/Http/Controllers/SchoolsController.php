@@ -34,7 +34,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * List schools
+     * List schools DataTable
      * @return mixed
      * @throws \Exception
      */
@@ -42,7 +42,8 @@ class SchoolsController extends Controller
     {
         $data = Escuela::all()->map(function($query){
             return [
-                "nombre" => $query->nombre
+                "nombre" => $query->nombre,
+                "id"     => $query->id
             ];
         });
 
@@ -50,9 +51,9 @@ class SchoolsController extends Controller
     }
 
 
-    public function showSchool (Escuela $school)
+    public function showSchool (Escuela $escuela)
     {
-        //
+        return view ('showSchool')->with('escuela', $escuela);
     }
 
 }
