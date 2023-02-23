@@ -341,7 +341,7 @@ return [
                 [
                     'text'    => 'Editar Formas de Pago',
                     'icon'    => 'fa-regular fa-credit-card',
-                    'url'     => '#',
+                    'url'     => '/admin/formas-de-pago',
                 ],
                 [
                     'text' => 'Editar Días de Eventos',

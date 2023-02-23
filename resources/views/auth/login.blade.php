@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">

@@ -19,10 +19,13 @@ class CreateEgresadosTable extends Migration
                 ->on('escuelas')->onDelete('cascade');
             $table->foreignId('menu_id')->references('id')
                 ->on('menus');
+            $table->foreignId('dia_id')->references('id')
+                ->on('dias');
             $table->text('curso');
-            $table->date('fecha');
-            $table->date('fecha_pago');
-            $table->unsignedBigInteger('forma_pago');
+            $table->text('fecha');
+            $table->text('fecha_pago');
+            $table->foreignId('forma_pago_id')->references('id')
+                ->on('formas_pago');
             $table->boolean('status')->default(1);
             $table->boolean('esta_pago')->default(0);
             $table->string('slug');

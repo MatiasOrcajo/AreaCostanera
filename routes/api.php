@@ -19,3 +19,5 @@ Route::get('schools', [\App\Http\Controllers\SchoolsController::class, 'listScho
 Route::get('days', [\App\Http\Controllers\DaysController::class, 'listDays'])->name('list.days');
 
 Route::get('menus', [\App\Http\Controllers\MenuController::class, 'listMenus'])->name('list.menus');
+
+Route::get('formas-de-pago', [\App\Http\Controllers\FormasPagoController::class, 'listFormasPago'])->name('list.formasPago');

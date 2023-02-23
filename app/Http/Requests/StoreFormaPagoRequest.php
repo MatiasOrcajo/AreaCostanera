@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGraduatePartyRequest extends FormRequest
+class StoreFormaPagoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,8 @@ class StoreGraduatePartyRequest extends FormRequest
     public function rules()
     {
         return [
-            'escuela_id' => 'required|integer',
-            'curso' => 'required',
-            'fecha' => 'required',
-            'dia_id' => 'required|integer',
-            'menu_id' => 'required|integer',
-            'fecha_pago' => 'required',
-            'forma_pago_id' => 'required|integer'
+            'nombre' => 'required',
+            'interes' => 'required|integer'
         ];
     }
 }

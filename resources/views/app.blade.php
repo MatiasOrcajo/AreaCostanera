@@ -21,12 +21,12 @@
 
     <!-- styles -->
     <link href="{{asset('/css/styles.css')}}" type="text/css" rel="stylesheet"/>
-
+     <!---->
     <!-- datatables -->
     <link href="{{asset('/css/datatables.css')}}" type="text/css" rel="stylesheet">
 </head>
 <body>
-
+@yield('content')
 <script src="{{asset('js/Constants.js')}}"></script>
 <script>
     const Constants = new ConstantsModel();

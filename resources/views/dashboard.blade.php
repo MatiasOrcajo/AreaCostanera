@@ -24,7 +24,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="create_graduate_party" action="" method="POST">
+                    <form id="create_graduate_party" action="{{route('store.graduate')}}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="escuela_id" class="form-label">Escuela</label>
@@ -38,8 +38,8 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="curso_id" class="form-label">Curso</label>
-                            <input type="text" class="form-control" id="curso_id" name="curso_id">
+                            <label for="curso" class="form-label">Curso</label>
+                            <input type="text" class="form-control" id="curso" name="curso">
                         </div>
                         <div class="mb-3">
                             <label for="fecha" class="form-label">Fecha del evento</label>
@@ -71,9 +71,9 @@
                             <label for="forma_pago_id" class="form-label">Forma de Pago:</label>
                             <select id="forma_pago_id" class="form-select" name="forma_pago_id">
                                 <option selected="true" disabled="disabled">Seleccionar forma de pago</option>
-                                @if(isset($menus))
-                                    @foreach($menus as $menu)
-                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                @if(isset($formasPago))
+                                    @foreach($formasPago as $formaPago)
+                                        <option value="{{$formaPago->id}}">{{$formaPago->nombre}}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -82,14 +82,37 @@
                             <label for="fecha_pago" class="form-label">Fecha de pago</label>
                             <input name="fecha_pago" type="date" class="form-control" id="fecha_pago">
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="my-3 mt-5">
+        @foreach($graduateParties as $event)
+            <div class="rounded w-3 h-3 p-2" style="{{$event->getDateStatusCss()}}">
+                <div class="row">
+                    <div class="col-10">
+                        <h3>
+                            Escuela {{$event->school->nombre}}, curso {{$event->curso}}
+                        </h3>
+                        <span>
+                            Fecha: {{$event->fecha}}
+                            <br>
+                            Personas: {{count($event->persons)}}
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <a title="Ver escuela" href="{{route('show.graduate', $event->slug)}}"> <i class="fa-solid fa-eye"></i> </a>
+                    </div>
+                </div>
+            </div>
+
+        @endforeach
     </div>
 @stop
 
