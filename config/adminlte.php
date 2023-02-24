@@ -357,17 +357,17 @@ return [
         ],
         ['header' => 'ALERTAS'],
         [
-            'text'       => 'Este mes',
+            'text'       => 'Menos de 15 días',
             'icon_color' => 'red',
             'url'        => '#',
         ],
         [
-            'text'       => 'Próximo mes',
+            'text'       => 'Entre 15 y 30 días',
             'icon_color' => 'yellow',
             'url'        => '#',
         ],
         [
-            'text'       => 'Dos meses o mas',
+            'text'       => 'Un mes o mas',
             'icon_color' => 'cyan',
             'url'        => '#',
         ],

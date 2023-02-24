@@ -1,4 +1,4 @@
-@extends('app')
+@extends('appAdmin')
 @extends('adminlte::page')
 
 @section('title', 'Dashboard')
@@ -56,32 +56,32 @@
                                 @endif
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="menu_id" class="form-label">Menú elegido:</label>
-                            <select id="menu_id" class="form-select" name="menu_id">
-                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>
-                                @if(isset($menus))
-                                    @foreach($menus as $menu)
-                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="forma_pago_id" class="form-label">Forma de Pago:</label>
-                            <select id="forma_pago_id" class="form-select" name="forma_pago_id">
-                                <option selected="true" disabled="disabled">Seleccionar forma de pago</option>
-                                @if(isset($formasPago))
-                                    @foreach($formasPago as $formaPago)
-                                        <option value="{{$formaPago->id}}">{{$formaPago->nombre}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_pago" class="form-label">Fecha de pago</label>
-                            <input name="fecha_pago" type="date" class="form-control" id="fecha_pago">
-                        </div>
+{{--                        <div class="mb-3">--}}
+{{--                            <label for="menu_id" class="form-label">Menú elegido:</label>--}}
+{{--                            <select id="menu_id" class="form-select" name="menu_id">--}}
+{{--                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>--}}
+{{--                                @if(isset($menus))--}}
+{{--                                    @foreach($menus as $menu)--}}
+{{--                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="mb-3">--}}
+{{--                            <label for="forma_pago_id" class="form-label">Forma de Pago:</label>--}}
+{{--                            <select id="forma_pago_id" class="form-select" name="forma_pago_id">--}}
+{{--                                <option selected="true" disabled="disabled">Seleccionar forma de pago</option>--}}
+{{--                                @if(isset($formasPago))--}}
+{{--                                    @foreach($formasPago as $formaPago)--}}
+{{--                                        <option value="{{$formaPago->id}}">{{$formaPago->nombre}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                        <div class="mb-3">--}}
+{{--                            <label for="fecha_pago" class="form-label">Fecha de pago</label>--}}
+{{--                            <input name="fecha_pago" type="date" class="form-control" id="fecha_pago">--}}
+{{--                        </div>--}}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -93,26 +93,29 @@
     </div>
 
     <div class="my-3 mt-5">
-        @foreach($graduateParties as $event)
-            <div class="rounded w-3 h-3 p-2" style="{{$event->getDateStatusCss()}}">
-                <div class="row">
-                    <div class="col-10">
-                        <h3>
-                            Escuela {{$event->school->nombre}}, curso {{$event->curso}}
-                        </h3>
-                        <span>
+        @if(isset($graduateParties))
+            @foreach($graduateParties as $event)
+                <div class="rounded w-3 h-3 p-2" style="{{$event->getDateStatusCss()}}">
+                    <div class="row">
+                        <div class="col-10">
+                            <h3>
+                                Escuela {{$event->school->nombre}}, curso {{$event->curso}}
+                            </h3>
+                            <span>
                             Fecha: {{$event->fecha}}
                             <br>
                             Personas: {{count($event->persons)}}
                         </span>
-                    </div>
-                    <div class="col-2">
-                        <a title="Ver escuela" href="{{route('show.graduate', $event->slug)}}"> <i class="fa-solid fa-eye"></i> </a>
+                        </div>
+                        <div class="col-2">
+                            <a title="Ver escuela" href="{{route('show.graduate', $event->slug)}}"> <i
+                                    class="fa-solid fa-eye"></i> </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        @endforeach
+            @endforeach
+        @endif
     </div>
 @stop
 

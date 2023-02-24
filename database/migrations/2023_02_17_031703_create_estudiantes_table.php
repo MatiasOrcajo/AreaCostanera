@@ -18,6 +18,11 @@ class CreateEstudiantesTable extends Migration
             $table->string('nombre');
             $table->foreignId('egresado_id')->references('id')
                 ->on('egresados')->onDelete('cascade');
+            $table->foreignId('menu_id')->references('id')
+                ->on('menus');
+            $table->text('fecha_pago');
+            $table->foreignId('forma_pago_id')->references('id')
+                ->on('formas_pago');
             $table->integer('menores_12')->nullable();
             $table->integer('menores_5')->nullable();
             $table->text('email')->nullable();

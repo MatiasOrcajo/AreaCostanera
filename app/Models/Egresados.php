@@ -17,6 +17,7 @@ class Egresados extends Model
     protected $table = 'egresados';
     use HasFactory;
 
+
     /**
      * Get the color reference for difference between now and event date
      * @return string
@@ -26,17 +27,16 @@ class Egresados extends Model
     {
         $graduationDate = Carbon::parse($this->fecha);
         $now = Carbon::now();
-        $diff = $graduationDate->diffInDays($now);
-
+        $diff = $graduationDate->diffInDays($now) + 1;
+//        dump($diff);
         switch ($diff) {
-            case $diff < 30:
+
+            case $diff <= 14:
                 return "background: rgb(219,37,24);
                         background: linear-gradient(180deg, rgba(219,37,24,1) 35%, rgba(182,2,2,1) 70%);";
-                break;
-            case $diff > 30 && $diff < 60:
+            case $diff > 14 && $diff < 30:
                 return "background: rgb(239,237,13);
                         background: linear-gradient(180deg, rgba(239,237,13,1) 35%, rgba(210,201,20,1) 70%);";
-                break;
             default:
                 return "background: rgb(19,250,247);
                         background: linear-gradient(180deg, rgba(19,250,247,1) 35%, rgba(20,210,208,1) 70%);";

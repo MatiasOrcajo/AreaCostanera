@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGraduatePartyRequest;
+use App\Models\Constants;
 use App\Models\Dia;
 use App\Models\Egresados;
 use App\Models\Escuela;
@@ -17,7 +18,9 @@ class GraduatePartyController extends Controller
 
     public function index()
     {
-        $graduateParties = Egresados::all();
+        $graduateParties = Egresados::all()->map(function($query) {
+            return $query->where(Carbon::parse($query->fecha), '<=', Carbon::now());
+        });
         $escuelas = Escuela::all();
         $dias = Dia::all();
         $menus = Menu::all();
@@ -37,17 +40,17 @@ class GraduatePartyController extends Controller
     {
         $validated = $request->validated();
         $graduateDate = Carbon::createFromFormat('Y-m-d', $validated['fecha'])->format('d-m-Y');
-        $paymentDate = Carbon::createFromFormat('Y-m-d', $validated['fecha_pago'])->format('d-m-Y');
+//        $paymentDate = Carbon::createFromFormat('Y-m-d', $validated['fecha_pago'])->format('d-m-Y');
 
         Egresados::create([
             'escuela_id' => $validated['escuela_id'],
             'curso' => $validated['curso'],
             'fecha' => $graduateDate,
-            'fecha_pago' => $paymentDate,
+//            'fecha_pago' => $paymentDate,
             'dia_id' => $validated['dia_id'],
-            'menu_id' => $validated['menu_id'],
+//            'menu_id' => $validated['menu_id'],
             'slug' => Str::slug($validated['escuela_id'] . '-' . $validated['curso'] . '-' . $graduateDate),
-            'forma_pago_id' => $validated['forma_pago_id']
+//            'forma_pago_id' => $validated['forma_pago_id']
         ]);
 
         return back()->with('success', 'Fiesta añadida');

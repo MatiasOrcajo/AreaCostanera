@@ -28,9 +28,9 @@ class StoreGraduatePartyRequest extends FormRequest
             'curso' => 'required',
             'fecha' => 'required',
             'dia_id' => 'required|integer',
-            'menu_id' => 'required|integer',
-            'fecha_pago' => 'required',
-            'forma_pago_id' => 'required|integer'
+//            'menu_id' => 'required|integer',
+//            'fecha_pago' => 'required',
+//            'forma_pago_id' => 'required|integer'
         ];
     }
 }
