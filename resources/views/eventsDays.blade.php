@@ -1,4 +1,4 @@
-@extends('app')
+@extends('appAdmin')
 @extends('adminlte::page')
 
 @section('title', 'Grupos de días')

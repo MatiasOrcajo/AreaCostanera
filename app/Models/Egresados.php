@@ -33,13 +33,13 @@ class Egresados extends Model
 
             case $diff <= 14:
                 return "background: rgb(219,37,24);
-                        background: linear-gradient(180deg, rgba(219,37,24,1) 35%, rgba(182,2,2,1) 70%);";
+                        background: linear-gradient(180deg, rgba(219,37,24,1.2) 35%, rgba(182,2,2,1.2) 70%);";
             case $diff > 14 && $diff < 30:
                 return "background: rgb(239,237,13);
-                        background: linear-gradient(180deg, rgba(239,237,13,1) 35%, rgba(210,201,20,1) 70%);";
+                        background: linear-gradient(180deg, rgba(239,237,13,1.2) 35%, rgba(210,201,20,1.2) 70%);";
             default:
-                return "background: rgb(19,250,247);
-                        background: linear-gradient(180deg, rgba(19,250,247,1) 35%, rgba(20,210,208,1) 70%);";
+                return "background: rgb(21,196,35);
+                        background: linear-gradient(180deg, rgba(21,196,35,1.2) 35%, rgba(15,140,17,1.2) 70%);";
 
         }
     }
@@ -53,7 +53,6 @@ class Egresados extends Model
     {
         return $this->hasMany(Estudiante::class, 'egresado_id');
     }
-
 
 
 }

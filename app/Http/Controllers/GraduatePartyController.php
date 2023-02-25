@@ -18,9 +18,14 @@ class GraduatePartyController extends Controller
 
     public function index()
     {
-        $graduateParties = Egresados::all()->map(function($query) {
-            return $query->where(Carbon::parse($query->fecha), '<=', Carbon::now());
-        });
+        $graduateParties = Egresados::orderBy('fecha_carbon')
+            ->get()
+            ->map(function ($query) {
+                $date = Carbon::parse($query->fecha);
+                if ($date->add(24, 'hours') >= Carbon::now()->add(-3, 'hours'))
+                    return $query;
+            });
+
         $escuelas = Escuela::all();
         $dias = Dia::all();
         $menus = Menu::all();
@@ -46,6 +51,7 @@ class GraduatePartyController extends Controller
             'escuela_id' => $validated['escuela_id'],
             'curso' => $validated['curso'],
             'fecha' => $graduateDate,
+            'fecha_carbon' => Carbon::parse($graduateDate),
 //            'fecha_pago' => $paymentDate,
             'dia_id' => $validated['dia_id'],
 //            'menu_id' => $validated['menu_id'],
@@ -60,7 +66,13 @@ class GraduatePartyController extends Controller
     public function showGraduateParty($slug)
     {
         $event = Egresados::where('slug', $slug)->first();
+        $menus = Menu::all();
 
-        return view ('showEvent', compact('event'));
+        return view('showEvent', compact('event', 'menus'));
+    }
+
+    public function getGraduatePartyPeople()
+    {
+        //
     }
 }

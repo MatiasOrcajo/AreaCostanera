@@ -368,7 +368,7 @@ return [
         ],
         [
             'text'       => 'Un mes o mas',
-            'icon_color' => 'cyan',
+            'icon_color' => 'green',
             'url'        => '#',
         ],
     ],

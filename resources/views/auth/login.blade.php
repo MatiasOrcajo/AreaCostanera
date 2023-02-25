@@ -1,4 +1,4 @@
-@extends('app')
+@extends('appAdmin')
 @section('content')
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 <x-guest-layout>
