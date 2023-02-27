@@ -18,7 +18,7 @@ class CreateEstudianteFamiliaresTable extends Migration
             $table->string('nombre');
             $table->foreignId('estudiante_id')->references('id')
                 ->on('estudiantes')->onDelete('cascade');
-            $table->foreignId('menu_especial')->references('id')
+            $table->foreignId('menu_especial')->nullable()->references('id')
                 ->on('menus');
             $table->timestamps();
         });

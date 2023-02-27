@@ -21,3 +21,10 @@ Route::get('days', [\App\Http\Controllers\DaysController::class, 'listDays'])->n
 Route::get('menus', [\App\Http\Controllers\MenuController::class, 'listMenus'])->name('list.menus');
 
 Route::get('formas-de-pago', [\App\Http\Controllers\FormasPagoController::class, 'listFormasPago'])->name('list.formasPago');
+
+Route::get('menus-especiales', [\App\Http\Controllers\MenuController::class, 'listSpecialMenus'])->name('list.menusEspeciales');
+
+Route::get('fiesta-egresados/{id}', [\App\Http\Controllers\GraduatePartyController::class,
+    'listGraduatePartyPeople'])->name('list.graduateParty');
+
+Route::get('egresado/{id}', [\App\Http\Controllers\StudentsController::class, 'getStudentFamily'])->name('list.studentFamily');

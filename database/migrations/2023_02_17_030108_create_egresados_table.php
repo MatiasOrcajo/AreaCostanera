@@ -30,6 +30,7 @@ class CreateEgresadosTable extends Migration
             $table->boolean('status')->default(1);
 //            $table->boolean('esta_pago')->default(0);
             $table->string('slug');
+//            $table->integer('egresados_totales');
 //            $table->integer('total')->nullable();
             $table->timestamps();
         });

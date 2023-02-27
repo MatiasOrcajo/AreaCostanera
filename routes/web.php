@@ -36,6 +36,11 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::post('store/graduate-party', [GraduatePartyController::class, 'createGraduateParty'])->name('store.graduate');
 
+    Route::post('store/student', [\App\Http\Controllers\StudentsController::class, 'store'])->name('store.student');
+
+    Route::get('admin/menu-especial', [\App\Http\Controllers\MenuController::class, 'indexSpecialMenu'])->name('menuEspecial');
+
+    Route::post('store/menu-especial', [\App\Http\Controllers\MenuController::class, 'storeSpecialMenu'])->name('store.menuEspecial');
 
 });
 

@@ -21,6 +21,7 @@
 
     <!-- styles -->
     <link href="{{asset('/css/styles.css')}}" type="text/css" rel="stylesheet"/>
+    <link href="{{ mix('css/app.css') }}" type="text/css" rel="stylesheet"/>
      <!---->
     <!-- datatables -->
     <link href="{{asset('/css/datatables.css')}}" type="text/css" rel="stylesheet">

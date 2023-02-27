@@ -351,7 +351,7 @@ return [
                 [
                     'text' => 'Editar Menús Especiales',
                     'icon' => 'fa-solid fa-wheat-awn-circle-exclamation',
-                    'url'  => '#',
+                    'url'  => '/admin/menu-especial',
                 ],
             ],
         ],

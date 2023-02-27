@@ -20,9 +20,12 @@ class CreateEstudiantesTable extends Migration
                 ->on('egresados')->onDelete('cascade');
             $table->foreignId('menu_id')->references('id')
                 ->on('menus');
+            $table->foreignId('menu_especial_id')->nullable()->references('id')
+                ->on('menus_especiales');
             $table->text('fecha_pago');
             $table->foreignId('forma_pago_id')->references('id')
                 ->on('formas_pago');
+            $table->integer('familiares')->nullable();
             $table->integer('menores_12')->nullable();
             $table->integer('menores_5')->nullable();
             $table->text('email')->nullable();
