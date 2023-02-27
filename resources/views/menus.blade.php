@@ -47,6 +47,43 @@
         </div>
     </div>
 
+    @foreach($menus as $menu)
+        <!-- Modal -->
+        <div class="modal modal-center fade" id="editMenu{{$menu->id}}" tabindex="-1"
+             aria-labelledby="editMenu{{$menu->id}}Label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editMenu{{$menu->id}}Label">Editar menú</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="create_graduate_party" action="{{route('edit.menu', $menu->id)}}" method="POST">
+                            @method('PUT')
+                            @csrf
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre del menú:</label>
+                                <small>(Por ejemplo: "Clásico")</small>
+                                <input type="text" class="form-control" value="{{$menu->nombre}}" id="nombre" name="nombre">
+                            </div>
+                            <div class="mb-3">
+                                <label for="precio" class="form-label">Precio:</label>
+                                <small></small>
+                                <input value="{{$menu->precio}}" type="number" class="form-control" id="precio" name="precio">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+
     <div class="mt-3">
         <table id="menus" class="display nowrap mt-5" style="width:100%">
             <thead>
@@ -63,6 +100,11 @@
 @section('js')
 
     <script>
+
+        function openEditModal(id)
+        {
+            $("#editMenu"+id).modal('show');
+        }
 
         $(document).ready(function(){
             let url = '{{route('list.menus')}}'
@@ -96,7 +138,7 @@
                         "render": function ( data, type, full, meta ) {
                             let id = full.id;
                             console.log(full);
-                            return `<a title="Ver escuela" href="${Constants.BASE_URL}admin/escuela/${id}"> <i class="fa-solid fa-eye"></i> </a>`;
+                            return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-eye"></i> </a>`;
                         }
                     },
                 ]

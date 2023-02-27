@@ -42,6 +42,9 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::post('store/menu-especial', [\App\Http\Controllers\MenuController::class, 'storeSpecialMenu'])->name('store.menuEspecial');
 
+    Route::put('edit/menu/{menu}', [\App\Http\Controllers\MenuController::class, 'edit'])->name('edit.menu');
+    Route::put('edit/school/{school}', [\App\Http\Controllers\SchoolsController::class, 'edit'])->name('edit.school');
+    Route::put('edit/payment/{paymentType}', [\App\Http\Controllers\FormasPagoController::class, 'edit'])->name('edit.payment');
 });
 
 

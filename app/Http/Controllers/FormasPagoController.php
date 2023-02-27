@@ -12,13 +12,16 @@ class FormasPagoController extends Controller
 {
     public function index()
     {
-        return view('formasDePago');
+        $paymentTypes = FormasPago::all();
+
+        return view('formasDePago', compact('paymentTypes'));
     }
 
     public function listFormasPago()
     {
         $data = FormasPago::all()->map(function ($query) {
             return [
+                'id' => $query->id,
                 'nombre' => $query->nombre,
                 'interes' => $query->interes
             ];
@@ -34,6 +37,13 @@ class FormasPagoController extends Controller
         FormasPago::create($validated);
 
         return back()->with('success', 'Forma de Pago añadida');
+    }
+
+    public function edit(FormasPago $paymentType, Request $request)
+    {
+        $paymentType->update($request->toArray());
+
+        return back()->with('success', 'Forma de pago editada');
     }
 
 

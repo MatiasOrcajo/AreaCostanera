@@ -15,7 +15,8 @@ class MenuController extends Controller
 
     public function index()
     {
-        return view('menus');
+        $menus = Menu::all();
+        return view('menus', compact('menus'));
     }
 
     public function listMenus()
@@ -65,8 +66,10 @@ class MenuController extends Controller
         return back()->with('success', 'Menu agregado');
     }
 
-    public function editMenu(Menu $menu)
+    public function edit(Menu $menu, Request $request)
     {
-        //
+        $menu->update($request->toArray());
+
+        return back()->with('success', 'Menú editado');
     }
 }

@@ -16,7 +16,9 @@ class SchoolsController extends Controller
      */
     public function index()
     {
-        return view('schools');
+        $schools = Escuela::all();
+
+        return view('schools', compact('schools'));
     }
 
     /**
@@ -54,6 +56,13 @@ class SchoolsController extends Controller
     public function showSchool (Escuela $escuela)
     {
         return view ('showSchool')->with('escuela', $escuela);
+    }
+
+    public function edit(Escuela $school, Request $request)
+    {
+        $school->update($request->toArray());
+
+        return back()->with('success', 'Escuela editada');
     }
 
 }
