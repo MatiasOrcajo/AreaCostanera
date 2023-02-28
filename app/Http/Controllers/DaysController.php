@@ -12,7 +12,9 @@ class DaysController extends Controller
 {
     public function index()
     {
-        return view('eventsDays');
+        $days = Dia::all();
+
+        return view('eventsDays', compact('days'));
     }
 
     public function listDays()
@@ -33,5 +35,12 @@ class DaysController extends Controller
         Dia::create($validated);
 
         return back()->with('success', 'Grupo creado');
+    }
+
+    public function edit(Dia $day,Request $request)
+    {
+        $day->update($request->toArray());
+
+        return back()->with('success', 'Día editado correctamente');
     }
 }

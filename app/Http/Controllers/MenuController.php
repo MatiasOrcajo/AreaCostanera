@@ -42,7 +42,9 @@ class MenuController extends Controller
 
     public function indexSpecialMenu()
     {
-        return view('specialMenus');
+        $menus = MenuEspecial::all();
+
+        return view('specialMenus', compact('menus'));
     }
 
     public function listSpecialMenus()
@@ -71,5 +73,12 @@ class MenuController extends Controller
         $menu->update($request->toArray());
 
         return back()->with('success', 'Menú editado');
+    }
+
+    public function editSpecialMenu(MenuEspecial $menu,Request $request)
+    {
+        $menu->update($request->toArray());
+
+        return back()->with('success', 'Menú editado correctamente');
     }
 }

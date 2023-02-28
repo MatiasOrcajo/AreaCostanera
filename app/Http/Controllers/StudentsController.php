@@ -69,4 +69,24 @@ class StudentsController extends Controller
 
         return DataTables::of($data)->make(true);
     }
+
+    public function edit(Estudiante $graduate, Request $request)
+    {
+        $graduate->update($request->toArray());
+
+        $selectedMenuPrice = Menu::find($graduate->menu_id)->precio;
+
+        $graduateTotalAmountWithoutDiscounts = $selectedMenuPrice * ($graduate->familiares + 1);
+        $graduateMinorsOfTwelveDiscount = $selectedMenuPrice * $graduate->menores_12 / 2; //50%
+        $graduateMinorsOfFiveDiscount = $selectedMenuPrice * $graduate->menores_5; //100%
+        $totalWithoutDiscounts = $graduateTotalAmountWithoutDiscounts - $graduateMinorsOfTwelveDiscount -
+            $graduateMinorsOfFiveDiscount;
+
+        $graduate->total =
+            $totalWithoutDiscounts + (($totalWithoutDiscounts * $graduate->paymentType->interes) / 100);
+        $graduate->save();
+
+        return back()->with('success', 'Estudiante editado correctamente');
+    }
+
 }

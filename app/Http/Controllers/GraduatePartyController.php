@@ -69,11 +69,12 @@ class GraduatePartyController extends Controller
     public function showGraduateParty($slug)
     {
         $event = Egresados::where('slug', $slug)->first();
+        $graduates = $event->persons;
         $menus = Menu::all();
         $formasPago = FormasPago::all();
         $specialMenu = MenuEspecial::all();
 
-        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu'));
+        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates'));
     }
 
     public function listGraduatePartyPeople(int $id)
@@ -100,4 +101,6 @@ class GraduatePartyController extends Controller
 
         return DataTables::of($data)->make(true);
     }
+
+
 }

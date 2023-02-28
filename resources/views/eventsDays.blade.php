@@ -49,6 +49,40 @@
             </thead>
         </table>
     </div>
+
+    @foreach($days as $day)
+        <!-- Modal -->
+        <div class="modal modal-center fade" id="editDay{{$day->id}}" tabindex="-1"
+             aria-labelledby="editDay{{$day->id}}Label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editDay{{$day->id}}Label">Editar día</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="create_graduate_party" action="{{route('edit.day', $day->id)}}" method="POST">
+                            @method('PUT')
+                            @csrf
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre:</label>
+                                <input value="{{$day->nombre}}" type="text" class="form-control" id="nombre"
+                                       name="nombre">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+
 @stop
 
 @section('css')
@@ -57,6 +91,11 @@
 @section('js')
 
     <script>
+
+        function openEditModal(id)
+        {
+            $("#editDay"+id).modal('show');
+        }
 
         $(document).ready(function(){
             let url = '{{route('list.days')}}'
@@ -87,7 +126,8 @@
                         "render": function ( data, type, full, meta ) {
                             let id = full.id;
                             console.log(full);
-                            return `<a title="Ver escuela" href="${Constants.BASE_URL}admin/escuela/${id}"> <i class="fa-solid fa-eye"></i> </a>`;
+                            return `<a title="Ver escuela" onclick="openEditModal(${id})"> <i class="fa-solid
+                            fa-pen-to-square"></i> </a>`;
                         }
                     },
                 ]

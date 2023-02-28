@@ -133,7 +133,7 @@
                         sortable: false,
                         "render": function ( data, type, full, meta ) {
                             let id = full.id;
-                            return `<a title="Editar forma de pago" style="cursor: pointer" onclick="openEditModal(${id})"> <i class="fa-solid fa-eye"></i> </a>`;
+                            return `<a title="Editar forma de pago" style="cursor: pointer" onclick="openEditModal(${id})"> <i class="fa-solid fa-pen-to-square"></i> </a>`;
                         }
                     },
                 ]

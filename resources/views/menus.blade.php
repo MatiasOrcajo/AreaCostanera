@@ -138,7 +138,7 @@
                         "render": function ( data, type, full, meta ) {
                             let id = full.id;
                             console.log(full);
-                            return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-eye"></i> </a>`;
+                            return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-pen-to-square"></i> </a>`;
                         }
                     },
                 ]
