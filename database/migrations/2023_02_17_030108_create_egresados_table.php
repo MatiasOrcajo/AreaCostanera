@@ -17,8 +17,8 @@ class CreateEgresadosTable extends Migration
             $table->id();
             $table->foreignId('escuela_id')->references('id')
                 ->on('escuelas')->onDelete('cascade');
-//            $table->foreignId('menu_id')->references('id')
-//                ->on('menus');
+            $table->foreignId('menu_id')->references('id')
+                ->on('menus');
             $table->foreignId('dia_id')->references('id')
                 ->on('dias');
             $table->text('curso');

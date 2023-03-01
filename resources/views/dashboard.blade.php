@@ -56,17 +56,17 @@
                                 @endif
                             </select>
                         </div>
-                        {{--                        <div class="mb-3">--}}
-                        {{--                            <label for="menu_id" class="form-label">Menú elegido:</label>--}}
-                        {{--                            <select id="menu_id" class="form-select" name="menu_id">--}}
-                        {{--                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>--}}
-                        {{--                                @if(isset($menus))--}}
-                        {{--                                    @foreach($menus as $menu)--}}
-                        {{--                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>--}}
-                        {{--                                    @endforeach--}}
-                        {{--                                @endif--}}
-                        {{--                            </select>--}}
-                        {{--                        </div>--}}
+                        <div class="mb-3">
+                            <label for="menu_id" class="form-label">Menú elegido:</label>
+                            <select id="menu_id" class="form-select" name="menu_id">
+                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>
+                                @if(isset($menus))
+                                    @foreach($menus as $menu)
+                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                         {{--                        <div class="mb-3">--}}
                         {{--                            <label for="forma_pago_id" class="form-label">Forma de Pago:</label>--}}
                         {{--                            <select id="forma_pago_id" class="form-select" name="forma_pago_id">--}}
@@ -97,7 +97,8 @@
             <div class="d-flex flex-wrap align-items-center">
                 @foreach($graduateParties as $event)
                     @if($event)
-                        <div class=" col-3 rounded m-3 w-3 h-3 p-2" style="{{$event->getDateStatusCss()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
+                        <div class=" col-3 rounded m-3 w-3 h-3 p-2"
+                             style="{{$event->getDateStatusCss()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
                             <a href="{{route('show.graduate', $event->slug)}}">
                                 <div class="col-10">
                                     <h3>
