@@ -42,6 +42,10 @@
                             <input type="text" class="form-control" id="curso" name="curso">
                         </div>
                         <div class="mb-3">
+                            <label for="cantidad_egresados" class="form-label">Cantidad de egresados</label>
+                            <input type="number" class="form-control" id="cantidad_egresados" name="cantidad_egresados">
+                        </div>
+                        <div class="mb-3">
                             <label for="fecha" class="form-label">Fecha del evento</label>
                             <input name="fecha" type="date" class="form-control" id="fecha">
                         </div>
@@ -107,7 +111,7 @@
                                     <span>
                                         Fecha: {{$event->fecha}}
                                     <br>
-                                        Personas: {{count($event->persons)}}
+                                        Personas: {{$event->cantidad_egresados}}
                                     </span>
                                 </div>
                             </a>

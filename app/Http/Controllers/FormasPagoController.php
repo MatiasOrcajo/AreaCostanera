@@ -32,7 +32,7 @@ class FormasPagoController extends Controller
 
     public function storeFormaPago(StoreFormaPagoRequest $request)
     {
-        $valid                                        ated = $request->validated();
+        $validated = $request->validated();
 
         FormasPago::create($validated);
 

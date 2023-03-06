@@ -18,6 +18,10 @@ class CreateDiasTable extends Migration
             $table->string('nombre');
             $table->timestamps();
         });
+
+        $dias = new \App\Models\Dia();
+        $dias->nombre = 'Lunes a Viernes';
+        $dias->save();
     }
 
     /**

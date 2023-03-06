@@ -22,6 +22,7 @@ class CreateEgresadosTable extends Migration
             $table->foreignId('dia_id')->references('id')
                 ->on('dias');
             $table->text('curso');
+            $table->unsignedBigInteger('cantidad_egresados');
             $table->text('fecha');
             $table->text('fecha_carbon');// event date
 //            $table->text('fecha_pago');

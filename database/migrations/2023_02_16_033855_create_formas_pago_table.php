@@ -19,6 +19,21 @@ class CreateFormasPagoTable extends Migration
             $table->integer('interes');
             $table->timestamps();
         });
+
+        $formaPago = new \App\Models\FormasPago();
+        $formaPago->nombre = 'Efectivo';
+        $formaPago->interes = 0;
+        $formaPago->save();
+
+        $formaPago = new \App\Models\FormasPago();
+        $formaPago->nombre = '3 cuotas';
+        $formaPago->interes = 30;
+        $formaPago->save();
+
+        $formaPago = new \App\Models\FormasPago();
+        $formaPago->nombre = '6 cuotas';
+        $formaPago->interes = 50;
+        $formaPago->save();
     }
 
     /**

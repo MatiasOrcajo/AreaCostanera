@@ -55,9 +55,10 @@ class GraduatePartyController extends Controller
             'curso' => $validated['curso'],
             'fecha' => $graduateDate,
             'fecha_carbon' => Carbon::parse($graduateDate),
+            'cantidad_egresados' => $validated['cantidad_egresados'],
 //            'fecha_pago' => $paymentDate,
             'dia_id' => $validated['dia_id'],
-//            'menu_id' => $validated['menu_id'],
+            'menu_id' => $validated['menu_id'],
             'slug' => Str::slug($validated['escuela_id'] . '-' . $validated['curso'] . '-' . $graduateDate),
 //            'forma_pago_id' => $validated['forma_pago_id']
         ]);
@@ -83,19 +84,19 @@ class GraduatePartyController extends Controller
             ->get()
             ->map(function ($query) {
                 return [
-                        'id' => $query->id,
-                        'nombre' => $query->nombre,
-                        'menu' => $query->menu->nombre,
-                        'personas' => $query->familiares,
-                        'menores_12' => $query->menores_12,
-                        'menores_5' => $query->menores_5,
-                        'menu_especial' => $query->menu_especial_id ? MenuEspecial::find($query->menu_especial_id)
-                    ->nombre : '-',
-                        'fecha_pago' => $query->fecha_pago,
-                        'forma_pago' => $query->paymentType->nombre,
-                        'email' => $query->email,
-                        'telefono' => $query->telefono,
-                        'total' => '$'.$query->total
+                    'id' => $query->id,
+                    'nombre' => $query->nombre,
+                    'menu' => $query->menu->nombre,
+                    'personas' => $query->familiares,
+                    'menores_12' => $query->menores_12,
+                    'menores_5' => $query->menores_5,
+                    'menu_especial' => $query->menu_especial_id ? MenuEspecial::find($query->menu_especial_id)
+                        ->nombre : '-',
+                    'fecha_pago' => $query->fecha_pago,
+                    'forma_pago' => $query->paymentType->nombre,
+                    'email' => $query->email,
+                    'telefono' => $query->telefono,
+                    'total' => '$' . $query->total
                 ];
             });
 
