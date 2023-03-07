@@ -92,7 +92,7 @@ class StudentsController extends Controller
 
     public function showStudent(Estudiante $student)
     {
-        dd($student);
+        return view('showStudent', compact('student'));
     }
 
 }
