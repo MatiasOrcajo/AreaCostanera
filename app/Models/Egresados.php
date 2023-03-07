@@ -54,5 +54,10 @@ class Egresados extends Model
         return $this->hasMany(Estudiante::class, 'egresado_id');
     }
 
+    public function menu(): BelongsTo
+    {
+        return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
 
 }

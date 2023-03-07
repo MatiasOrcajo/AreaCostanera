@@ -9,6 +9,7 @@ use App\Models\Egresados;
 use App\Models\Escuela;
 use App\Models\Estudiante;
 use App\Models\FormasPago;
+use App\Models\MediosPago;
 use App\Models\Menu;
 use App\Models\MenuEspecial;
 use Carbon\Carbon;
@@ -33,6 +34,7 @@ class GraduatePartyController extends Controller
         $dias = Dia::all();
         $menus = Menu::all();
         $formasPago = FormasPago::all();
+
 
         return view('dashboard', compact('graduateParties', 'escuelas', 'dias', 'menus', 'formasPago'));
     }
@@ -74,8 +76,9 @@ class GraduatePartyController extends Controller
         $menus = Menu::all();
         $formasPago = FormasPago::all();
         $specialMenu = MenuEspecial::all();
+        $mediosPago = MediosPago::all();
 
-        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates'));
+        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates', 'mediosPago'));
     }
 
     public function listGraduatePartyPeople(int $id)
@@ -86,7 +89,7 @@ class GraduatePartyController extends Controller
                 return [
                     'id' => $query->id,
                     'nombre' => $query->nombre,
-                    'menu' => $query->menu->nombre,
+                    'menu' => $query->medioDePago->metodo,
                     'personas' => $query->familiares,
                     'menores_12' => $query->menores_12,
                     'menores_5' => $query->menores_5,

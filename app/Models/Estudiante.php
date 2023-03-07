@@ -35,4 +35,9 @@ class Estudiante extends Model
     {
         return $this->hasMany(EstudianteFamiliares::class, 'estudiante_id');
     }
+
+    public function medioDePago()
+    {
+        return $this->belongsTo(MediosPago::class, 'medio_pago_id');
+    }
 }

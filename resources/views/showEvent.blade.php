@@ -57,17 +57,17 @@
                             <input type="text" class="form-control" id="nombre" name="nombre">
                         </div>
 
-                        <div class="mb-3" id="menu_id">
-                            <label for="menu_id" class="form-label">Menú:</label>
-                            <select class="form-select" name="menu_id">
-                                <option selected="true" disabled="disabled">Seleccionar menú</option>
-                                @if(isset($menus))
-                                    @foreach($menus as $menu)
-                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
+{{--                        <div class="mb-3" id="menu_id">--}}
+{{--                            <label for="menu_id" class="form-label">Menú:</label>--}}
+{{--                            <select class="form-select" name="menu_id">--}}
+{{--                                <option selected="true" disabled="disabled">Seleccionar menú</option>--}}
+{{--                                @if(isset($menus))--}}
+{{--                                    @foreach($menus as $menu)--}}
+{{--                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
 
                         <div class="mb-3" id="menu_id">
                             <label for="menu_id" class="form-label">Menú especial:</label>
@@ -96,6 +96,22 @@
                                     @foreach($formasPago as $formaPago)
                                         <option
                                             value="{{$formaPago->id}}">{{$formaPago->nombre}}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="mb-3" id="medio_pago_id">
+                            <label for="medio_pago_id" class="form-label">Medio de Pago:</label>
+                            <select class="form-select" name="medio_pago_id">
+                                <option selected="true" disabled="disabled">Seleccionar medio de
+                                    pago
+                                </option>
+                                @if(isset($mediosPago))
+                                    @foreach($mediosPago as $formaPago)
+                                        <option
+                                                value="{{$formaPago->id}}">{{$formaPago->metodo}}
                                         </option>
                                     @endforeach
                                 @endif
@@ -199,85 +215,100 @@
                               method="POST">
                             @method('PUT')
                             @csrf
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre completo</label>
+                                    <input value="{{$graduate->nombre}}" type="text" class="form-control" id="nombre"
+                                           name="nombre">
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre completo</label>
-                                <input value="{{$graduate->nombre}}" type="text" class="form-control" id="nombre"
-                                       name="nombre">
-                            </div>
+{{--                                <div class="mb-3" id="menu_id">--}}
+{{--                                    <label for="menu_id" class="form-label">Menú:</label>--}}
+{{--                                    <select class="form-select" name="menu_id">--}}
+{{--                                        <option selected="true" disabled="disabled">Seleccionar menú</option>--}}
+{{--                                        @if(isset($menus))--}}
+{{--                                            @foreach($menus as $menu)--}}
+{{--                                                <option {{$menu->id == $graduate->menu_id ? 'selected' : ''}}--}}
+{{--                                                        value="{{$menu->id}}">{{$menu->nombre}}</option>--}}
+{{--                                            @endforeach--}}
+{{--                                        @endif--}}
+{{--                                    </select>--}}
+{{--                                </div>--}}
 
-                            <div class="mb-3" id="menu_id">
-                                <label for="menu_id" class="form-label">Menú:</label>
-                                <select class="form-select" name="menu_id">
-                                    <option selected="true" disabled="disabled">Seleccionar menú</option>
-                                    @if(isset($menus))
-                                        @foreach($menus as $menu)
-                                            <option {{$menu->id == $graduate->menu_id ? 'selected' : ''}}
-                                                    value="{{$menu->id}}">{{$menu->nombre}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                                <div class="mb-3" id="menu_id">
+                                    <label for="menu_id" class="form-label">Menú especial:</label>
+                                    <select class="form-select" name="menu_especial_id">
+                                        <option selected="true" disabled="disabled">Seleccionar menú especial</option>
+                                        @if(isset($specialMenu))
+                                            @foreach($specialMenu as $menu)
+                                                <option {{$menu->id == $graduate->menu_especial_id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
 
-                            <div class="mb-3" id="menu_id">
-                                <label for="menu_id" class="form-label">Menú especial:</label>
-                                <select class="form-select" name="menu_especial_id">
-                                    <option selected="true" disabled="disabled">Seleccionar menú especial</option>
-                                    @if(isset($specialMenu))
-                                        @foreach($specialMenu as $menu)
-                                            <option {{$menu->id == $graduate->menu_especial_id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                                <div class="mb-3" id="fecha_pago">
+                                    <label for="fecha_pago" class="form-label">Fecha de pago</label>
+                                    <input value="{{$graduate->fecha_pago}}" name="fecha_pago" type="date" class="form-control">
+                                </div>
 
-                            <div class="mb-3" id="fecha_pago">
-                                <label for="fecha_pago" class="form-label">Fecha de pago</label>
-                                <input value="{{$graduate->fecha_pago}}" name="fecha_pago" type="date" class="form-control">
-                            </div>
+                                <div class="mb-3" id="forma_pago_id">
+                                    <label for="forma_pago_id" class="form-label">Forma de Pago:</label>
+                                    <select class="form-select" name="forma_pago_id">
+                                        <option selected="true" disabled="disabled">Seleccionar forma de
+                                            pago
+                                        </option>
+                                        @if(isset($formasPago))
+                                            @foreach($formasPago as $formaPago)
+                                                <option {{$formaPago->id == $graduate->forma_pago_id ? 'selected' : ''}}
+                                                        value="{{$formaPago->id}}">{{$formaPago->nombre}}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
 
-                            <div class="mb-3" id="forma_pago_id">
-                                <label for="forma_pago_id" class="form-label">Forma de Pago:</label>
-                                <select class="form-select" name="forma_pago_id">
-                                    <option selected="true" disabled="disabled">Seleccionar forma de
-                                        pago
-                                    </option>
-                                    @if(isset($formasPago))
-                                        @foreach($formasPago as $formaPago)
-                                            <option {{$formaPago->id == $graduate->forma_pago_id ? 'selected' : ''}}
-                                                value="{{$formaPago->id}}">{{$formaPago->nombre}}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                                <div class="mb-3" id="medio_pago_id">
+                                    <label for="medio_pago_id" class="form-label">Medio de Pago:</label>
+                                    <select class="form-select" name="medio_pago_id">
+                                        <option selected="true" disabled="disabled">Seleccionar medio de
+                                            pago
+                                        </option>
+                                        @if(isset($mediosPago))
+                                            @foreach($mediosPago as $formaPago)
+                                                <option {{$formaPago->id == $graduate->forma_pago_id ? 'selected' : ''}}
+                                                        value="{{$formaPago->id}}">{{$formaPago->metodo}}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
 
-                            <div class="mb-3" id="familiares">
-                                <label for="familiares" class="form-label">Familiares totales:</label>
-                                <input value="{{$graduate->familiares}}" name="familiares" type="number" class="form-control">
-                            </div>
+                                <div class="mb-3" id="familiares">
+                                    <label for="familiares" class="form-label">Familiares totales:</label>
+                                    <input value="{{$graduate->familiares}}" name="familiares" type="number" class="form-control">
+                                </div>
 
-                            <div class="mb-3" id="menores_12">
-                                <label for="menores_12" class="form-label">Menores de 12:</label>
-                                <input value="{{$graduate->menores_12}}" name="menores_12" type="number"
-                                       class="form-control">
-                            </div>
+                                <div class="mb-3" id="menores_12">
+                                    <label for="menores_12" class="form-label">Menores de 12:</label>
+                                    <input value="{{$graduate->menores_12}}" name="menores_12" type="number"
+                                           class="form-control">
+                                </div>
 
-                            <div class="mb-3" id="menores_5">
-                                <label for="menores_5" class="form-label">Menores de 5:</label>
-                                <input value="{{$graduate->menores_5}}" type="number" class="form-control"
-                                       name="menores_5">
-                            </div>
+                                <div class="mb-3" id="menores_5">
+                                    <label for="menores_5" class="form-label">Menores de 5:</label>
+                                    <input value="{{$graduate->menores_5}}" type="number" class="form-control"
+                                           name="menores_5">
+                                </div>
 
-                            <div class="mb-3" id="email">
-                                <label for="email" class="form-label">Email:</label>
-                                <input value="{{$graduate->email}}" type="email" class="form-control" name="email">
-                            </div>
+                                <div class="mb-3" id="email">
+                                    <label for="email" class="form-label">Email:</label>
+                                    <input value="{{$graduate->email}}" type="email" class="form-control" name="email">
+                                </div>
 
-                            <div class="mb-3" id="telefono">
-                                <label for="telefono" class="form-label">Teléfono:</label>
-                                <input value="{{$graduate->telefono}}" type="text" class="form-control" name="telefono">
-                            </div>
+                                <div class="mb-3" id="telefono">
+                                    <label for="telefono" class="form-label">Teléfono:</label>
+                                    <input value="{{$graduate->telefono}}" type="text" class="form-control" name="telefono">
+                                </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -353,6 +384,8 @@
             $('#fecha_pago').show()
             $('#telefono').show()
             $('#familiares').show()
+            $('#medio_pago_id').show()
+            //
 
 
             $('#is_graduated').change(
@@ -367,6 +400,7 @@
                         $('#telefono').hide()
                         $('#menu_id').hide()
                         $('#familiares').hide()
+                        $('#medio_pago_id').hide()
                     } else {
                         $('#estudiante_select').hide();
                         $('#forma_pago_id').show()
@@ -377,6 +411,7 @@
                         $('#telefono').show()
                         $('#menu_id').show()
                         $('#familiares').show()
+                        $('#medio_pago_id').show()
                     }
                 });
 
@@ -402,10 +437,6 @@
                     {
                         title: "NOMBRE",
                         data: 'nombre'
-                    },
-                    {
-                        title: "MENÚ",
-                        data: 'menu'
                     },
                     {
                         title: "PERSONAS",
@@ -435,6 +466,10 @@
                         data: 'forma_pago'
                     },
                     {
+                        title: "METODO PAGO",
+                        data: 'menu'
+                    },
+                    {
                         title: "EMAIL",
                         data: 'email'
                     },
@@ -455,8 +490,7 @@
                             let nombre = full.nombre;
                             let personas = full.personas;
 
-                            return `<a title="Ver familiares" onclick="showStudentFamily(${id}, '${nombre}',
-                            ${personas})"
+                            return `<a title="Ver familiares" href="/admin/estudiante/${id}"
                             style="cursor:
                             pointer;
                             "> <i

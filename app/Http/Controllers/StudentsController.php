@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Egresados;
 use App\Models\Estudiante;
 use App\Models\EstudianteFamiliares;
 use App\Models\Menu;
@@ -19,17 +20,18 @@ class StudentsController extends Controller
             $student = new Estudiante();
             $student->nombre = $request->nombre;
             $student->egresado_id = $request->event_id;
-            $student->menu_id = $request->menu_id;
+//            $student->menu_id = $request->menu_id;
             $student->menu_especial_id = $request->menu_especial_id ?? null;
             $student->fecha_pago = Carbon::createFromFormat('Y-m-d', $request->fecha_pago)->format('d-m-Y');
             $student->forma_pago_id = $request->forma_pago_id;
+            $student->medio_pago_id = $request->medio_pago_id;
             $student->familiares = $request->familiares;
             $student->menores_12 = $request->menores_12;
             $student->menores_5 = $request->menores_5;
             $student->email = $request->email;
             $student->telefono = $request->telefono;
 
-            $selectedMenuPrice = Menu::find($request->menu_id)->precio;
+            $selectedMenuPrice = Egresados::find($request->event_id)->menu->precio;
 
             $studentTotalAmountWithoutDiscounts = $selectedMenuPrice * ($request->familiares + 1);
             $studentMinorsOfTwelveDiscount = $selectedMenuPrice * $student->menores_12 / 2; //50%
@@ -73,8 +75,7 @@ class StudentsController extends Controller
     public function edit(Estudiante $graduate, Request $request)
     {
         $graduate->update($request->toArray());
-
-        $selectedMenuPrice = Menu::find($graduate->menu_id)->precio;
+        $selectedMenuPrice = Egresados::find($graduate->egresado_id)->menu->precio;
 
         $graduateTotalAmountWithoutDiscounts = $selectedMenuPrice * ($graduate->familiares + 1);
         $graduateMinorsOfTwelveDiscount = $selectedMenuPrice * $graduate->menores_12 / 2; //50%
@@ -87,6 +88,11 @@ class StudentsController extends Controller
         $graduate->save();
 
         return back()->with('success', 'Estudiante editado correctamente');
+    }
+
+    public function showStudent(Estudiante $student)
+    {
+        dd($student);
     }
 
 }

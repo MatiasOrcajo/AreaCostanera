@@ -23,6 +23,8 @@ class CreateEstudiantesTable extends Migration
             $table->foreignId('menu_especial_id')->nullable()->references('id')
                 ->on('menus_especiales');
             $table->text('fecha_pago');
+            $table->foreignId('medio_pago_id')->references('id')
+                ->on('medios_pago');
             $table->foreignId('forma_pago_id')->references('id')
                 ->on('formas_pago');
             $table->integer('familiares')->nullable();

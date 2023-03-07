@@ -53,6 +53,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::put('edit/special-menu/{menu}', [\App\Http\Controllers\MenuController::class, 'editSpecialMenu'])->name('edit.specialMenu');
 
     Route::put('edit/graduate/{graduate}', [\App\Http\Controllers\StudentsController::class, 'edit'])->name('edit.graduate');
+
+    Route::get('/admin/estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'showStudent'])->name
+    ('show.student');
 });
 
 
