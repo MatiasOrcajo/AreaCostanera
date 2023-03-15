@@ -40,4 +40,34 @@ class Estudiante extends Model
     {
         return $this->belongsTo(MediosPago::class, 'medio_pago_id');
     }
+
+    public function getPriceOfAdults()
+    {
+        $adultsCount = $this->familiares - $this->menores_5 - $this->menores_12;
+        $priceWithoutDiscounts = $adultsCount * Egresados::find($this->egresado_id)->menu->precio;
+        $discounts = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents();
+
+        return ceil($priceWithoutDiscounts - ($priceWithoutDiscounts * $discounts / 100));
+    }
+
+    public function getPriceOfMinorsOfTwelve()
+    {
+        $minorsCount = $this->menores_12;
+        $priceWithoutDiscounts = ($minorsCount * Egresados::find($this->egresado_id)->menu->precio) / 2;
+        $discounts = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents();
+
+        return ceil($priceWithoutDiscounts - ($priceWithoutDiscounts * $discounts / 100));
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Pago::class, 'estudiante_id');
+    }
+
+    public function getTotalPrice()
+    {
+        $iva = ($this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults())* $this->medioDePago->iva / 100;
+
+        return $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults() + $iva - array_sum($this->payments->pluck('amount')->toArray());
+    }
 }

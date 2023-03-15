@@ -59,5 +59,24 @@ class Egresados extends Model
         return $this->belongsTo(Menu::class, 'menu_id');
     }
 
+    public function getEventDiscountByAmountOfStudents()
+    {
+        $numberOfStudents = $this->cantidad_egresados;
+
+        switch ($numberOfStudents){
+            case $numberOfStudents >= 20 && $numberOfStudents <= 30:
+                return 0;
+            case $numberOfStudents >= 31 && $numberOfStudents <= 50:
+                return 3;
+            case $numberOfStudents >= 51 && $numberOfStudents <= 70:
+                return 6;
+            case $numberOfStudents >= 71 && $numberOfStudents <= 100:
+                return 9;
+            case $numberOfStudents >= 101 && $numberOfStudents <= 150:
+                return 12;
+            case $numberOfStudents >= 151:
+                return 15;
+        }
+    }
 
 }

@@ -22,7 +22,7 @@ class CreateEstudiantesTable extends Migration
 //                ->on('menus');
             $table->foreignId('menu_especial_id')->nullable()->references('id')
                 ->on('menus_especiales');
-            $table->text('fecha_pago');
+            $table->date('fecha_pago');
             $table->foreignId('medio_pago_id')->references('id')
                 ->on('medios_pago');
             $table->foreignId('forma_pago_id')->references('id')
@@ -32,7 +32,7 @@ class CreateEstudiantesTable extends Migration
             $table->integer('menores_5')->nullable();
             $table->text('email')->nullable();
             $table->text('telefono')->nullable();
-            $table->integer('total');
+            //$table->integer('total');
             $table->timestamps();
         });
     }

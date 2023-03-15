@@ -83,6 +83,7 @@ class GraduatePartyController extends Controller
 
     public function listGraduatePartyPeople(int $id)
     {
+
         $data = Estudiante::where('egresado_id', $id)->with(['menu', 'paymentType', 'people'])
             ->get()
             ->map(function ($query) {
@@ -91,19 +92,24 @@ class GraduatePartyController extends Controller
                     'nombre' => $query->nombre,
                     'menu' => $query->medioDePago->metodo,
                     'personas' => $query->familiares,
-                    'menores_12' => $query->menores_12,
-                    'menores_5' => $query->menores_5,
                     'menu_especial' => $query->menu_especial_id ? MenuEspecial::find($query->menu_especial_id)
                         ->nombre : '-',
-                    'fecha_pago' => $query->fecha_pago,
+                    'fecha_pago' => \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $query->fecha_pago)->format('d-m-Y'),
                     'forma_pago' => $query->paymentType->nombre,
                     'email' => $query->email,
                     'telefono' => $query->telefono,
-                    'total' => '$' . $query->total
+                    'total' => '$' . $query->getTotalPrice()
                 ];
             });
 
         return DataTables::of($data)->make(true);
+    }
+
+    public function deleteEvent(Egresados $event)
+    {
+        $event->delete();
+
+        return true;
     }
 
 

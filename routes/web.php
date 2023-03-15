@@ -56,6 +56,12 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/admin/estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'showStudent'])->name
     ('show.student');
+
+    Route::post('/admin/pay-debt/{student}', [\App\Http\Controllers\StudentsController::class, 'payPartOfDebt'])->name('payDebt');
+
+    Route::delete('/admin/eliminar-estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'deleteStudent'])->name('deleteStudent');
+
+    Route::delete('/admin/eliminar-evento/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'deleteEvent'])->name('deleteEvent');
 });
 
 

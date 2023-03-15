@@ -7,6 +7,7 @@ use App\Models\Estudiante;
 use App\Models\EstudianteFamiliares;
 use App\Models\Menu;
 use App\Models\MenuEspecial;
+use App\Models\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
@@ -15,14 +16,13 @@ class StudentsController extends Controller
 {
     public function store(Request $request)
     {
-
         if($request->has('is_graduated')){
             $student = new Estudiante();
             $student->nombre = $request->nombre;
             $student->egresado_id = $request->event_id;
 //            $student->menu_id = $request->menu_id;
             $student->menu_especial_id = $request->menu_especial_id ?? null;
-            $student->fecha_pago = Carbon::createFromFormat('Y-m-d', $request->fecha_pago)->format('d-m-Y');
+            $student->fecha_pago = $request->fecha_pago;
             $student->forma_pago_id = $request->forma_pago_id;
             $student->medio_pago_id = $request->medio_pago_id;
             $student->familiares = $request->familiares;
@@ -30,17 +30,6 @@ class StudentsController extends Controller
             $student->menores_5 = $request->menores_5;
             $student->email = $request->email;
             $student->telefono = $request->telefono;
-
-            $selectedMenuPrice = Egresados::find($request->event_id)->menu->precio;
-
-            $studentTotalAmountWithoutDiscounts = $selectedMenuPrice * ($request->familiares + 1);
-            $studentMinorsOfTwelveDiscount = $selectedMenuPrice * $student->menores_12 / 2; //50%
-            $studentMinorsOfFiveDiscount = $selectedMenuPrice * $student->menores_5; //100%
-            $totalWithoutDiscounts = $studentTotalAmountWithoutDiscounts - $studentMinorsOfTwelveDiscount -
-                $studentMinorsOfFiveDiscount;
-
-            $student->total =
-                $totalWithoutDiscounts + (($totalWithoutDiscounts * $student->paymentType->interes) / 100);
             $student->save();
         }
         else{
@@ -48,6 +37,7 @@ class StudentsController extends Controller
             $family->nombre = $request->nombre;
             $family->estudiante_id = $request->estudiante_id;
             $family->menu_especial = $request->menu_especial_id ?? null;
+            $family->telefono = $request->telefono;
 
             $family->save();
 
@@ -64,8 +54,10 @@ class StudentsController extends Controller
 
         $data = $student->people->map(function($query){
            return[
+               'id' => $query->id,
                 "nombre" => $query->nombre,
-                "menu_especial" => $query->menu_especial ? MenuEspecial::find($query->menu_especial)->nombre : '-'
+                "menu_especial" => $query->menu_especial ? MenuEspecial::find($query->menu_especial)->nombre : '-',
+               "telefono" => $query->telefono
            ];
         });
 
@@ -75,16 +67,7 @@ class StudentsController extends Controller
     public function edit(Estudiante $graduate, Request $request)
     {
         $graduate->update($request->toArray());
-        $selectedMenuPrice = Egresados::find($graduate->egresado_id)->menu->precio;
-
-        $graduateTotalAmountWithoutDiscounts = $selectedMenuPrice * ($graduate->familiares + 1);
-        $graduateMinorsOfTwelveDiscount = $selectedMenuPrice * $graduate->menores_12 / 2; //50%
-        $graduateMinorsOfFiveDiscount = $selectedMenuPrice * $graduate->menores_5; //100%
-        $totalWithoutDiscounts = $graduateTotalAmountWithoutDiscounts - $graduateMinorsOfTwelveDiscount -
-            $graduateMinorsOfFiveDiscount;
-
-        $graduate->total =
-            $totalWithoutDiscounts + (($totalWithoutDiscounts * $graduate->paymentType->interes) / 100);
+        $graduate->total = $graduate->getTotalPrice();
         $graduate->save();
 
         return back()->with('success', 'Estudiante editado correctamente');
@@ -92,7 +75,32 @@ class StudentsController extends Controller
 
     public function showStudent(Estudiante $student)
     {
-        return view('showStudent', compact('student'));
+        $specialMenu = MenuEspecial::all();
+
+        return view('showStudent', compact('student', 'specialMenu'));
+    }
+
+    public function deleteFamily(EstudianteFamiliares $family)
+    {
+        dd($family);
+    }
+
+    public function deleteStudent(Estudiante $student)
+    {
+        $student->delete();
+
+        return true;
+    }
+
+    public function payPartOfDebt(Estudiante $student,Request $request)
+    {
+        $pago = new Pago();
+        $pago->estudiante_id = $student->id;
+        $pago->amount = $request->pago;
+
+        $pago->save();
+
+        return back();
     }
 
 }

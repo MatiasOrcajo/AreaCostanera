@@ -12,7 +12,11 @@
 
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
-        Agregar persona
+        Agregar egresado
+    </button>
+
+    <button id="eliminarEvento" type="button" class="btn btn-danger">
+        Eliminar
     </button>
 
     <!-- Modal -->
@@ -328,51 +332,62 @@
 @stop
 
 @section('js')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
+
+        $('#eliminarEvento').on('click', function (){
+            swal.fire({
+                title: '<strong>¿Seguro que deseas eliminar al evento? Los cambios no podran deshacerse</strong>',
+                icon: 'question',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                    'Si',
+                cancelButtonText:
+                    'No',
+            })
+                .then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let route = '{{route('deleteEvent', $event->id)}}';
+                        let id = '{{$event->id}}';
+                        $.ajax({
+                            url: route,
+                            type: "DELETE",
+                            datatype: "json",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id: id,
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    // title: 'Oops...',
+                                     confirmButtonText:
+                                        '<button id="delete_button" onclick="history.back()" class="btn w-100 h-100">OK</button>',
+                                    title: '<strong>Evento eliminado</strong>',
+                                    // footer: '<a href="">Why do I have this issue?</a>'
+                                })
+                                    .then(function(){
+                                        history.go(-1);
+                                    })
+                            },
+                        })
+                    } else if (result.isDenied) {
+                        Swal.fire('No se eliminó ningún egresado', '', 'info')
+                    }
+                })
+        })
+
 
         function openEditModal(id)
         {
             $("#editGraduate"+id).modal('show');
         }
 
-        function showStudentFamily(id, nombre, familiares){
-            $('#estudianteModal').modal('show');
-
-            let url = '/api/egresado/'+id
-            let table = $('#estudianteTable').DataTable();
-            table.destroy();
-            $('#estudianteTable').empty();
-
-            $('#estudianteModalLabel').text(`Egresado ${nombre}`)
-
-            $('#estudianteTable').DataTable({
-
-                deferRender: true,
-                "autoWidth": true,
-                "paging": true,
-                stateSave: true,
-                "processing": true,
-                "ajax": url,
-                columnDefs: [{
-                    "defaultContent": "-",
-                    "targets": "_all"
-                }],
-                "columns": [
-                    {
-                        title: "NOMBRE",
-                        data: 'nombre'
-                    },
-                    {
-                        title: 'MENU ESPECIAL',
-                        data: 'menu_especial'
-                    }
-                ]
-
-
-            })
-
-
-        }
 
         $(document).ready(function () {
 
@@ -398,7 +413,7 @@
                         $('#email').hide()
                         $('#fecha_pago').hide()
                         $('#telefono').hide()
-                        $('#menu_id').hide()
+                        $('#menu_id').show()
                         $('#familiares').hide()
                         $('#medio_pago_id').hide()
                     } else {
@@ -429,10 +444,25 @@
                 stateSave: true,
                 "processing": true,
                 "ajax": url,
+                dom: 'Bfrtilp',
                 columnDefs: [{
                     "defaultContent": "-",
                     "targets": "_all"
                 }],
+                buttons:[
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fa fa-print"></i>',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-info'
+                    }
+                ],
                 "columns": [
                     {
                         title: "NOMBRE",
@@ -441,16 +471,6 @@
                     {
                         title: "PERSONAS",
                         data: 'personas',
-                        width: "5%",
-                    },
-                    {
-                        title: "M 12",
-                        data: 'menores_12',
-                        width: "5%",
-                    },
-                    {
-                        title: "M 5",
-                        data: 'menores_5',
                         width: "5%",
                     },
                     {
@@ -492,7 +512,7 @@
 
                             return `<a title="Ver familiares" href="/admin/estudiante/${id}"
                             style="cursor:
-                            pointer;
+                            pointer; text-decoration: none;
                             "> <i
                             class="fa-solid fa-eye"></i> </a>` +
                                 `<a title="Editar egresado" onclick="openEditModal(${id})"
@@ -503,9 +523,6 @@
                         }
                     },
                 ],
-                buttons: [
-                    'excel'
-                ]
             })
 
         })
