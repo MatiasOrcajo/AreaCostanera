@@ -25,9 +25,9 @@ class CreateUsersTable extends Migration
         });
 
         $user           = new App\Models\User;
-        $user->email    = 'admin@admin.com';
+        $user->email    = 'admin@areacostaneraegresados.com';
         $user->name     = 'admin';
-        $user->password = Hash::make('admin123**');
+        $user->password = Hash::make('Areaegresado2020');
 
         $user->save();
     }
