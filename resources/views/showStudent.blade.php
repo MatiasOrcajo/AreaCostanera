@@ -80,7 +80,7 @@
             <h5>Menores de 5: no pagan</h5>
             <h5>Medio de pago: {{$student->medioDePago->metodo}}</h5>
             <h5>IVA:
-                ${{($student->resumen ? round($student->resumen->iva) : round($student->getPriceOfMinorsOfTwelve() + $student->getPriceOfAdults())* $student->medioDePago->iva / 100)}}</h5>
+                ${{$student->resumen ? round($student->resumen->iva) : round(($student->getPriceOfMinorsOfTwelve() + $student->getPriceOfAdults())* $student->medioDePago->iva / 100}}</h5>
             <h4>Total:
                 ${{$student->resumen ? $student->resumen->total : $student->getTotalPrice()}}</h4>
             <h4>Total pendiente:
