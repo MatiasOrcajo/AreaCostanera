@@ -199,6 +199,56 @@
         </div>
     </div>
 
+    @foreach($student->people as $family)
+        <!-- Modal -->
+        <div class="modal modal-center fade" id="editFamily{{$family->id}}" tabindex="-1"
+             aria-labelledby="editFamily{{$family->id}}Label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="createGraduatePartyLabel">Editar familiar:</h1>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="create_graduate_party" action="{{route('editFamily', $family->id)}}" method="POST">
+                            @csrf
+                            <input class="" type="hidden" name="family_id" value="{{$family->id}}" id="family_id">
+
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre completo</label>
+                                <input value="{{$family->nombre}}" type="text" class="form-control" id="nombre" name="nombre">
+                            </div>
+
+                            <div class="mb-3" id="menu_id">
+                                <label for="menu_id" class="form-label">Menú especial:</label>
+                                <select class="form-select" name="menu_especial_id">
+                                    <option>Seleccionar menú especial</option>
+                                    @if(isset($specialMenu))
+                                        @foreach($specialMenu as $menu)
+                                            <option  {{$family->menu_especial == $menu->id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="telefono">
+                                <label for="telefono" class="form-label">Teléfono:</label>
+                                <input  value="{{$family->telefono}}" type="text" class="form-control" name="telefono">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
 @stop
 
 @section('css')
@@ -209,6 +259,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+
+        function openEditModal(id)
+        {
+            $("#editFamily"+id).modal('show');
+        }
 
         function closePrice(id) {
             swal.fire({
@@ -456,6 +511,27 @@
                     {
                         title: "TELÉFONO",
                         data: 'telefono'
+                    },
+                    {
+                        title: "OPCION",
+                        width: "5%",
+                        sortable: false,
+                        "render": function (data, type, full, meta) {
+                            let id = full.id;
+                            let nombre = full.nombre;
+                            let personas = full.personas;
+
+                            return `<a title="Editar familiar" onclick="openEditModal(${id})"
+                            style="cursor:
+                            pointer; text-decoration: none;
+                            "> <i
+                            class="fa-solid fa-edit"></i> </a>` +
+                                `<a title="Eliminar familiar" href="/admin/eliminar-familia/${id}"
+                            style="cursor:
+                            pointer;
+                            "> <i
+                            class="fa-solid fa-trash"></i> </a>`;;
+                        }
                     },
                 ]
             })

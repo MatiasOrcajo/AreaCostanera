@@ -70,6 +70,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::put('/admin/editar-evento/{event}', [GraduatePartyController::class, 'edit'])->name('edit.graduate');
 
     Route::get('/admin/eventos-terminados', [GraduatePartyController::class, 'finishedEvents'])->name('finished.events');
+
+    Route::get('/admin/eliminar-familia/{family}', [\App\Http\Controllers\StudentsController::class, 'deleteFamily'])->name('deleteFamily');
+
+    Route::post('/admin/editar-familia/{family}', [\App\Http\Controllers\StudentsController::class, 'editFamily'])->name('editFamily');
 });
 
 

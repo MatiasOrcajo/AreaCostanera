@@ -152,7 +152,26 @@ class StudentsController extends Controller
 
     public function deleteFamily(EstudianteFamiliares $family)
     {
-        dd($family);
+       $family->delete();
+
+       return back();
+    }
+
+    public function editFamily(Request $request, EstudianteFamiliares $family)
+    {
+        $family->nombre = $request->nombre;
+        if ($family->menu_especial_id == "Seleccionar menú especial"){
+            $family->menu_especial = null;
+        }
+        else{
+            $family->menu_especial = $family->menu_especial_id;
+        }
+
+        $family->telefono = $request->telefono;
+
+        $family->save();
+
+        return back();
     }
 
     public function deleteStudent(Estudiante $student)
