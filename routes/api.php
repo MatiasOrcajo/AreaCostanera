@@ -28,3 +28,13 @@ Route::get('fiesta-egresados/{id}', [\App\Http\Controllers\GraduatePartyControll
     'listGraduatePartyPeople'])->name('list.graduateParty');
 
 Route::get('egresado/{id}', [\App\Http\Controllers\StudentsController::class, 'getStudentFamily'])->name('list.studentFamily');
+
+Route::get('cuota/{cuota}', [\App\Http\Controllers\CuotasController::class, 'getDueStatus']);
+
+Route::put('saldar-cuota/{cuota}', [\App\Http\Controllers\CuotasController::class, 'payDue']);
+
+Route::get('interes', [\App\Http\Controllers\InteresCuotaController::class, 'listInteres'])->name('listInteres');
+
+Route::post('cerrar-precio/{estudiante}', [\App\Http\Controllers\StudentsController::class, 'closePrice']);
+
+Route::get('eventos-terminados', [\App\Http\Controllers\GraduatePartyController::class, 'listFinishedEvents'])->name('list.finishedEvents');

@@ -353,6 +353,17 @@ return [
                     'icon' => 'fa-solid fa-wheat-awn-circle-exclamation',
                     'url'  => '/admin/menu-especial',
                 ],
+                [
+                    'text' => 'Editar Intereses de Cuotas',
+                    'icon' => 'fa-solid fa-coins',
+                    'url'  => '/admin/intereses-cuotas',
+                ],
+                [
+                    'text' => 'Eventos terminados',
+                    'icon' => 'fa-solid fa-list',
+                    'url'  => '/admin/eventos-terminados',
+                ],
+//                <i class=""></i>
             ],
         ],
         ['header' => 'ALERTAS'],

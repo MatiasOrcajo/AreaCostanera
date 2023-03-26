@@ -5,13 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dia extends Model
+class EstudiantesCantidad extends Model
 {
     use HasFactory;
+    protected $table = 'estudiantes_cantidad';
     protected $guarded;
-
-    public function descuentos()
-    {
-        return $this->hasOne(DiasDescuentos::class, 'dia_id');
-    }
 }

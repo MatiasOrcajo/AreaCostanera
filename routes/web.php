@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::put('edit/special-menu/{menu}', [\App\Http\Controllers\MenuController::class, 'editSpecialMenu'])->name('edit.specialMenu');
 
-    Route::put('edit/graduate/{graduate}', [\App\Http\Controllers\StudentsController::class, 'edit'])->name('edit.graduate');
+    Route::put('edit/graduate/{graduate}', [\App\Http\Controllers\StudentsController::class, 'edit'])->name('edit.egresado');
 
     Route::get('/admin/estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'showStudent'])->name
     ('show.student');
@@ -62,6 +62,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::delete('/admin/eliminar-estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'deleteStudent'])->name('deleteStudent');
 
     Route::delete('/admin/eliminar-evento/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'deleteEvent'])->name('deleteEvent');
+
+    Route::get('/admin/intereses-cuotas', [\App\Http\Controllers\InteresCuotaController::class, 'index'])->name('interesCuotas');
+
+    Route::post('/admin/editar-interes', [\App\Http\Controllers\InteresCuotaController::class, 'edit'])->name('edit.interes');
+
+    Route::put('/admin/editar-evento/{event}', [GraduatePartyController::class, 'edit'])->name('edit.graduate');
+
+    Route::get('/admin/eventos-terminados', [GraduatePartyController::class, 'finishedEvents'])->name('finished.events');
 });
 
 

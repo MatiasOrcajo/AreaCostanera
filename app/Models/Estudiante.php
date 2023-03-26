@@ -43,20 +43,14 @@ class Estudiante extends Model
 
     public function getPriceOfAdults()
     {
-        $adultsCount = $this->familiares - $this->menores_5 - $this->menores_12;
-        $priceWithoutDiscounts = $adultsCount * Egresados::find($this->egresado_id)->menu->precio;
-        $discounts = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents();
-
-        return ceil($priceWithoutDiscounts - ($priceWithoutDiscounts * $discounts / 100));
+        $adultsCount = $this->familiares - $this->menores_5 - $this->menores_12 + 1;
+        return $adultsCount * Egresados::find($this->egresado_id)->menu->precio;
     }
 
     public function getPriceOfMinorsOfTwelve()
     {
         $minorsCount = $this->menores_12;
-        $priceWithoutDiscounts = ($minorsCount * Egresados::find($this->egresado_id)->menu->precio) / 2;
-        $discounts = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents();
-
-        return ceil($priceWithoutDiscounts - ($priceWithoutDiscounts * $discounts / 100));
+        return ($minorsCount * Egresados::find($this->egresado_id)->menu->precio) / 2;
     }
 
     public function payments()
@@ -64,10 +58,63 @@ class Estudiante extends Model
         return $this->hasMany(Pago::class, 'estudiante_id');
     }
 
+    public function getRemainingDuesCount()
+    {
+        return count($this->cuotas) - count($this->cuotas->where('status', 1));
+    }
+
     public function getTotalPrice()
     {
-        $iva = ($this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults())* $this->medioDePago->iva / 100;
+        if ($this->resumen == null) {
 
-        return $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults() + $iva - array_sum($this->payments->pluck('amount')->toArray());
+            $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults();
+
+            //iva = 21% de (precio menores + precio adultos + precio egresado)+ (precio menores + precio adultos + precio egresado) * interes / 100
+            $porcentaje_descuentos = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->getEventDiscountByDays($this->event->dia_id, $this->event->cantidad_egresados);
+
+            $total =
+                $total_adultos_egresado
+                + ($total_adultos_egresado * $this->paymentType->interes / 100)
+                - ($total_adultos_egresado + ($total_adultos_egresado * $this->paymentType->interes / 100))
+                * $porcentaje_descuentos / 100;
+
+            $total += $total * $this->medioDePago->iva / 100;
+
+        } else {
+            $total = $this->resumen->total;
+        }
+
+        return $total;
+
+    }
+
+    public function getDuesPayedAmount()
+    {
+        $payedDues = $this->cuotas->where('status', 1)->pluck('id')->map(function ($query) {
+            return Pago::where('estudiantes_cuotas_id', $query)->pluck('amount')->first();
+        });
+
+        return array_sum($payedDues->toArray());
+    }
+
+    public function getTotalPriceWithAdvancePayments()
+    {
+        return round($this->getTotalPrice() - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray()));
+    }
+
+    public function calculateDuesAmount()
+    {
+        $total = $this->getTotalPriceWithAdvancePayments();
+        return $total / count($this->cuotas);
+    }
+
+    public function cuotas()
+    {
+        return $this->hasMany(EstudianteCuota::class, 'estudiante_id');
+    }
+
+    public function resumen()
+    {
+        return $this->hasOne(EstudiantesResumen::class, 'estudiante_id');
     }
 }

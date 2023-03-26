@@ -77,8 +77,10 @@ class GraduatePartyController extends Controller
         $formasPago = FormasPago::all();
         $specialMenu = MenuEspecial::all();
         $mediosPago = MediosPago::all();
+        $escuelas = Escuela::all();
+        $dias = Dia::all();
 
-        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates', 'mediosPago'));
+        return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates', 'mediosPago', 'escuelas', 'dias'));
     }
 
     public function listGraduatePartyPeople(int $id)
@@ -112,5 +114,29 @@ class GraduatePartyController extends Controller
         return true;
     }
 
+    public function edit(Request $request, Egresados $event)
+    {
+        $event->update($request->toArray());
+
+        return back();
+    }
+
+    public function finishedEvents()
+    {
+        return view('finishedEvents');
+    }
+
+    public function listFinishedEvents()
+    {
+        $data = Egresados::where('fecha_carbon', '<', Carbon::now())->get()->map(function ($query){
+            return [
+              "evento" => 'Escuela '.Escuela::find($query->escuela_id)->nombre.', curso '.$query->curso,
+                "fecha" => $query->fecha,
+              "slug" => $query->slug
+            ];
+        });
+
+        return DataTables::of($data)->make(true);
+    }
 
 }

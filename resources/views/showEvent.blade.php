@@ -4,7 +4,7 @@
 @section('title', 'Evento '.$event->school->nombre)
 
 @section('content_header')
-    <h1>Fiesta de la escuela {{$event->school->nombre}} de la fecha {{$event->fecha}}</h1>
+    <h1>Fiesta de la escuela {{$event->school->nombre}} de la fecha {{\Carbon\Carbon::parse($event->fecha)->format('d-m-Y')}}</h1>
 @stop
 
 @section('content')
@@ -15,9 +15,83 @@
         Agregar egresado
     </button>
 
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEvent">
+        Editar evento
+    </button>
+
     <button id="eliminarEvento" type="button" class="btn btn-danger">
         Eliminar
     </button>
+
+    <div class="modal modal-center fade" id="editEvent" tabindex="-1"
+         aria-labelledby="editEventLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editEventLabel">Editar Fiesta de Egresados</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create_graduate_party" action="{{route('edit.graduate', $event->id)}}" method="POST">
+                        @csrf
+                        @method("PUT")
+                        <div class="mb-3">
+                            <label for="escuela_id" class="form-label">Escuela</label>
+                            <select id="escuela_id" class="form-select" name="escuela_id">
+                                <option selected="true" disabled="disabled">Seleccionar escuela</option>
+                                @if(isset($escuelas))
+                                    @foreach($escuelas as $escuela)
+                                        <option {{$escuela->id == $event->escuela_id ? 'selected' : ''}} value="{{$escuela->id}}">{{$escuela->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="curso" class="form-label">Curso</label>
+                            <input value="{{$event->curso}}" type="text" class="form-control" id="curso" name="curso">
+                        </div>
+                        <div class="mb-3">
+                            <label  for="cantidad_egresados" class="form-label">Cantidad de egresados</label>
+                            <input value="{{$event->cantidad_egresados}}" type="number" class="form-control" id="cantidad_egresados" name="cantidad_egresados">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha del evento</label>
+                            <input name="fecha" type="date" class="form-control" id="fecha">
+                            <small style="color: red">Volver a elegir la fecha</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dia_id" class="form-label">Grupo de días:</label>
+                            <select id="dia_id" class="form-select" name="dia_id">
+                                <option selected="true" disabled="disabled">Seleccionar grupo de días</option>
+                                @if(isset($dias))
+                                    @foreach($dias as $dia)
+                                        <option {{$dia->id == $event->dia_id ? 'selected' : ''}} value="{{$dia->id}}">{{$dia->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="menu_id" class="form-label">Menú elegido:</label>
+                            <select id="menu_id" class="form-select" name="menu_id">
+                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>
+                                @if(isset($menus))
+                                    @foreach($menus as $menu)
+                                        <option {{$menu->id == $event->menu_id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal -->
     <div class="modal modal-center fade" id="createGraduateParty" tabindex="-1"
@@ -181,27 +255,6 @@
 
 {{--    modal de estudiante--}}
 
-    <!-- Modal -->
-    <div class="modal fade" id="estudianteModal" tabindex="-1" role="dialog" aria-labelledby="estudianteModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="estudianteModalLabel"></h5>
-                </div>
-                <div class="modal-body">
-                    <table id="estudianteTable" class="display nowrap mt-5" style="width:100%">
-                        <thead>
-                            <th></th>
-                            <th></th>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     @foreach($graduates as $graduate)
         <!-- Modal -->
         <div class="modal modal-center fade" id="editGraduate{{$graduate->id}}" tabindex="-1"
@@ -215,7 +268,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="create_graduate_party" action="{{route('edit.graduate', $graduate->id)}}"
+                        <form id="create_graduate_party" action="{{route('edit.egresado', $graduate->id)}}"
                               method="POST">
                             @method('PUT')
                             @csrf
@@ -224,19 +277,6 @@
                                     <input value="{{$graduate->nombre}}" type="text" class="form-control" id="nombre"
                                            name="nombre">
                                 </div>
-
-{{--                                <div class="mb-3" id="menu_id">--}}
-{{--                                    <label for="menu_id" class="form-label">Menú:</label>--}}
-{{--                                    <select class="form-select" name="menu_id">--}}
-{{--                                        <option selected="true" disabled="disabled">Seleccionar menú</option>--}}
-{{--                                        @if(isset($menus))--}}
-{{--                                            @foreach($menus as $menu)--}}
-{{--                                                <option {{$menu->id == $graduate->menu_id ? 'selected' : ''}}--}}
-{{--                                                        value="{{$menu->id}}">{{$menu->nombre}}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
-{{--                                    </select>--}}
-{{--                                </div>--}}
 
                                 <div class="mb-3" id="menu_id">
                                     <label for="menu_id" class="form-label">Menú especial:</label>

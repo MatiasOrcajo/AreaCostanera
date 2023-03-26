@@ -79,4 +79,32 @@ class Egresados extends Model
         }
     }
 
+    public function getEventDiscountByDays(int $dia_id, $quantity)
+    {
+        $dia_descuento = DiasDescuentos::where('dia_id', $dia_id)->first();
+
+        switch ($quantity){
+            case $quantity >= 20 && $quantity <= 30:
+                $descuento = $dia_descuento->descuento_20_a_30;
+                break;
+            case $quantity >= 31 && $quantity <= 50:
+                $descuento = $dia_descuento->descuento_31_a_50;
+                break;
+            case $quantity >= 51 && $quantity <= 70:
+                $descuento = $dia_descuento->descuento_51_a_70;
+                break;
+            case $quantity >= 71 && $quantity <= 100:
+                $descuento = $dia_descuento->descuento_71_a_100;
+                break;
+            case $quantity >= 101 && $quantity <= 150:
+                $descuento = $dia_descuento->descuento_101_a_150;
+                break;
+            case $quantity >= 151:
+                $descuento = $dia_descuento->descuento_151_o_mas;
+                break;
+        }
+
+        return $descuento;
+    }
+
 }

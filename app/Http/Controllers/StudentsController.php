@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Egresados;
 use App\Models\Estudiante;
+use App\Models\EstudianteCuota;
 use App\Models\EstudianteFamiliares;
+use App\Models\EstudiantesResumen;
 use App\Models\Menu;
 use App\Models\MenuEspecial;
 use App\Models\Pago;
@@ -16,7 +18,8 @@ class StudentsController extends Controller
 {
     public function store(Request $request)
     {
-        if($request->has('is_graduated')){
+        if ($request->has('is_graduated')) {
+
             $student = new Estudiante();
             $student->nombre = $request->nombre;
             $student->egresado_id = $request->event_id;
@@ -31,8 +34,10 @@ class StudentsController extends Controller
             $student->email = $request->email;
             $student->telefono = $request->telefono;
             $student->save();
-        }
-        else{
+
+            self::createDues($request->forma_pago_id, $student);
+
+        } else {
             $family = new EstudianteFamiliares();
             $family->nombre = $request->nombre;
             $family->estudiante_id = $request->estudiante_id;
@@ -47,18 +52,79 @@ class StudentsController extends Controller
 
     }
 
+    private static function createDues(int $id, Estudiante $student)
+    {
+        if ($id == 2) {
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago);
+            $cuota->status = 0;
+            $cuota->save();
+//
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(1, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(2, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+        }
+
+        if ($id == 3) {
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago);
+            $cuota->status = 0;
+            $cuota->save();
+//
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(1, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(2, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(3, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(4, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+
+            $cuota = new EstudianteCuota();
+            $cuota->estudiante_id = $student->id;
+            $cuota->fecha_estipulada = Carbon::parse($student->fecha_pago)->add(5, 'month');
+            $cuota->status = 0;
+            $cuota->save();
+        }
+    }
+
     public function getStudentFamily($id)
     {
 //        dd($id);
         $student = Estudiante::find($id);
 
-        $data = $student->people->map(function($query){
-           return[
-               'id' => $query->id,
+        $data = $student->people->map(function ($query) {
+            return [
+                'id' => $query->id,
                 "nombre" => $query->nombre,
                 "menu_especial" => $query->menu_especial ? MenuEspecial::find($query->menu_especial)->nombre : '-',
-               "telefono" => $query->telefono
-           ];
+                "telefono" => $query->telefono
+            ];
         });
 
         return DataTables::of($data)->make(true);
@@ -66,8 +132,12 @@ class StudentsController extends Controller
 
     public function edit(Estudiante $graduate, Request $request)
     {
+        $graduate->cuotas->map(function ($query) {
+            $query->delete();
+        });
+
+        self::createDues($graduate->forma_pago_id, $graduate);
         $graduate->update($request->toArray());
-        $graduate->total = $graduate->getTotalPrice();
         $graduate->save();
 
         return back()->with('success', 'Estudiante editado correctamente');
@@ -92,15 +162,31 @@ class StudentsController extends Controller
         return true;
     }
 
-    public function payPartOfDebt(Estudiante $student,Request $request)
+    public function payPartOfDebt(Estudiante $student, Request $request)
     {
         $pago = new Pago();
         $pago->estudiante_id = $student->id;
         $pago->amount = $request->pago;
-
+        $pago->tipo = 'adelanto';
         $pago->save();
 
         return back();
+    }
+
+    public function closePrice(Estudiante $estudiante)
+    {
+        $resumen = new EstudiantesResumen();
+        $resumen->estudiante_id = $estudiante->id;
+        $resumen->precio_unitario = $estudiante->event->menu->precio;
+        $resumen->descuento_egresados = $estudiante->event->getEventDiscountByAmountOfStudents();
+        $resumen->precio_adulto_egresado = $estudiante->getPriceOfAdults();
+        $resumen->menores_12 = $estudiante->getPriceOfMinorsOfTwelve();
+        $resumen->iva = $estudiante->getTotalPrice() * $estudiante->medioDePago->iva / 100;
+        $resumen->total = $estudiante->getTotalPrice() + ($estudiante->getTotalPrice() * $estudiante->medioDePago->iva / 100);
+
+        $resumen->save();
+
+        return true;
     }
 
 }
