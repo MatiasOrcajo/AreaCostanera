@@ -78,13 +78,13 @@ class Estudiante extends Model
                 - ($total_adultos_egresado + ($total_adultos_egresado * $this->paymentType->interes / 100))
                 * $porcentaje_descuentos / 100;
 
-            $total += round($total * $this->medioDePago->iva / 100);
+            $total += $total * $this->medioDePago->iva / 100;
 
         } else {
             $total = $this->resumen->total;
         }
 
-        return $total;
+        return round($total);
 
     }
 
