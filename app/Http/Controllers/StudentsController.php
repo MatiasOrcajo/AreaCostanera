@@ -159,13 +159,12 @@ class StudentsController extends Controller
 
     public function editFamily(Request $request, EstudianteFamiliares $family)
     {
-        dd($request);
         $family->nombre = $request->nombre;
         if ($family->menu_especial_id == "Seleccionar menú especial"){
             $family->menu_especial = null;
         }
         else{
-            $family->menu_especial = $family->menu_especial_id;
+            $family->menu_especial = $request->menu_especial_id;
         }
 
         $family->telefono = $request->telefono;
