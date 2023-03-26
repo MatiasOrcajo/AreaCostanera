@@ -19,7 +19,7 @@ class CreateEstudianteFamiliaresTable extends Migration
             $table->foreignId('estudiante_id')->references('id')
                 ->on('estudiantes')->onDelete('cascade');
             $table->foreignId('menu_especial')->nullable()->references('id')
-                ->on('menus');
+                ->on('menus_especiales');
             $table->unsignedBigInteger('telefono')->nullable();
             $table->timestamps();
         });
