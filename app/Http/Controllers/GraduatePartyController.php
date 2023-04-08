@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGraduatePartyRequest;
 use App\Models\Constants;
 use App\Models\Dia;
+use App\Models\EgresadoDescuento;
 use App\Models\Egresados;
 use App\Models\Escuela;
 use App\Models\Estudiante;
@@ -93,7 +94,7 @@ class GraduatePartyController extends Controller
                     'id' => $query->id,
                     'nombre' => $query->nombre,
                     'menu' => $query->medioDePago->metodo,
-                    'personas' => $query->familiares,
+                    'personas' => count($query->people),
                     'menu_especial' => $query->menu_especial_id ? MenuEspecial::find($query->menu_especial_id)
                         ->nombre : '-',
                     'fecha_pago' => \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $query->fecha_pago)->format('d-m-Y'),
@@ -137,6 +138,17 @@ class GraduatePartyController extends Controller
         });
 
         return DataTables::of($data)->make(true);
+    }
+
+    public function createDiscount(Request $request, Egresados $event)
+    {
+        $discount = new EgresadoDescuento();
+        $discount->descuento = $request->descuento;
+        $discount->egresado_id = $event->id;
+
+        $discount->save();
+
+        return back();
     }
 
 }

@@ -27,9 +27,9 @@ class CreateEstudiantesTable extends Migration
                 ->on('medios_pago');
             $table->foreignId('forma_pago_id')->references('id')
                 ->on('formas_pago');
-            $table->integer('familiares')->nullable();
+           /** $table->integer('familiares')->nullable();
             $table->integer('menores_12')->nullable();
-            $table->integer('menores_5')->nullable();
+            $table->integer('menores_5')->nullable();**/
             $table->text('email')->nullable();
             $table->text('telefono')->nullable();
             //$table->integer('total');

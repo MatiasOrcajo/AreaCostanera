@@ -43,14 +43,18 @@ class Estudiante extends Model
 
     public function getPriceOfAdults()
     {
-        $adultsCount = $this->familiares - $this->menores_5 - $this->menores_12 + 1;
-        return $adultsCount * Egresados::find($this->egresado_id)->menu->precio;
+        $adultsCount = count($this->people->where('tipo', 'adulto')) + 1;
+        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
+
+        return $adultsCount * $menuPrice;
     }
 
     public function getPriceOfMinorsOfTwelve()
     {
-        $minorsCount = $this->menores_12;
-        return ($minorsCount * Egresados::find($this->egresado_id)->menu->precio) / 2;
+        $minorsCount = count($this->people->where('tipo', 'menor_12'));
+        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
+
+        return ($minorsCount * $menuPrice) / 2;
     }
 
     public function payments()
@@ -66,11 +70,10 @@ class Estudiante extends Model
     public function getTotalPrice()
     {
         if ($this->resumen == null) {
-
             $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults();
-
+            $special_discount = $this->event->discount->descuento ?? 0;
             //iva = 21% de (precio menores + precio adultos + precio egresado)+ (precio menores + precio adultos + precio egresado) * interes / 100
-            $porcentaje_descuentos = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->getEventDiscountByDays($this->event->dia_id, $this->event->cantidad_egresados);
+            $porcentaje_descuentos = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->getEventDiscountByDays($this->event->dia_id, $this->event->cantidad_egresados) + $special_discount;
 
             $total =
                 $total_adultos_egresado
@@ -81,6 +84,7 @@ class Estudiante extends Model
             $total += $total * $this->medioDePago->iva / 100;
 
         } else {
+//            $invitados_fuera_termino = array_sum($this->people->where('fuera_termino', 1)->pluck('total')->toArray());
             $total = $this->resumen->total;
         }
 

@@ -359,6 +359,11 @@ return [
                     'url'  => '/admin/intereses-cuotas',
                 ],
                 [
+                    'text' => 'Editar Descuentos',
+                    'icon' => 'fa-solid fa-percent',
+                    'url'  => '/admin/descuentos-egresados',
+                ],
+                [
                     'text' => 'Eventos terminados',
                     'icon' => 'fa-solid fa-list',
                     'url'  => '/admin/eventos-terminados',

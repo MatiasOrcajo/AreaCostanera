@@ -74,6 +74,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/admin/eliminar-familia/{family}', [\App\Http\Controllers\StudentsController::class, 'deleteFamily'])->name('deleteFamily');
 
     Route::post('/admin/editar-familia/{family}', [\App\Http\Controllers\StudentsController::class, 'editFamily'])->name('editFamily');
+
+    Route::post('/admin/store-invitado', [\App\Http\Controllers\StudentsController::class, 'storeFamily'])->name('store.invitado');
+
+    Route::post('/admin/create-discount/{event}', [GraduatePartyController::class, 'createDiscount'])->name('create.discount');
+
+    Route::get('/admin/descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'index']);
+
+    Route::put('/admin/descuentos-egresados-editar', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'edit'])->name('edit.discounts');
 });
 
 

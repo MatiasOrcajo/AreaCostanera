@@ -62,21 +62,30 @@ class Egresados extends Model
     public function getEventDiscountByAmountOfStudents()
     {
         $numberOfStudents = $this->cantidad_egresados;
+        $descuento = DescuentosCantidadegresados::first();
 
         switch ($numberOfStudents){
             case $numberOfStudents >= 20 && $numberOfStudents <= 30:
-                return 0;
+                $descuento = $descuento->descuento_20_a_30;
+                break;
             case $numberOfStudents >= 31 && $numberOfStudents <= 50:
-                return 3;
+                $descuento = $descuento->descuento_31_a_50;
+                break;
             case $numberOfStudents >= 51 && $numberOfStudents <= 70:
-                return 6;
+                $descuento = $descuento->descuento_51_a_70;
+                break;
             case $numberOfStudents >= 71 && $numberOfStudents <= 100:
-                return 9;
+                $descuento = $descuento->descuento_71_a_100;
+                break;
             case $numberOfStudents >= 101 && $numberOfStudents <= 150:
-                return 12;
+                $descuento = $descuento->descuento_101_a_150;
+                break;
             case $numberOfStudents >= 151:
-                return 15;
+                $descuento = $descuento->descuento_151_o_mas;
+                break;
         }
+
+        return $descuento;
     }
 
     public function getEventDiscountByDays(int $dia_id, $quantity)
@@ -105,6 +114,11 @@ class Egresados extends Model
         }
 
         return $descuento;
+    }
+
+    public function discount()
+    {
+        return $this->hasOne(EgresadoDescuento::class, 'egresado_id');
     }
 
 }

@@ -11,9 +11,8 @@
 
     <!-- Button trigger modal -->
     <div class="mb-3">
-        <small>El egresado tiene {{$student->familiares}} invitados y hay {{count($student->people)}}
-            cargados</small>
-        <br>
+        {{--        <small>El egresado tiene {{$student->familiares}} invitados y hay {{count($student->people)}}--}}
+        {{--            cargados</small>--}}
         <small>{{$student->resumen ? 'El precio está cerrado': 'El precio está sin cerrar'}}</small>
         <br>
     </div>
@@ -22,11 +21,12 @@
             Volver al evento
         </button>
     </a>
-    <button {{$student->resumen ? 'disabled':''}} type="button" class="btn btn-success" onclick="closePrice({{$student->id}})">
+    <button {{$student->resumen ? 'disabled':''}} type="button" class="btn btn-success"
+            onclick="closePrice({{$student->id}})">
         Cerrar precio
     </button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
-        Agregar persona
+        {{$student->resumen ? 'Agregar persona fuera de término' : 'Agregar persona'}}
     </button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#informarPago">
         Registrar adelanto
@@ -65,48 +65,79 @@
     </button>
 
 
-    <div class="mt-2 mb-5 row" id="toPrint">
-{{--        @dd($student->getTotalPrice())--}}
+    <div class="mt-2 mb-5 row position-relative" id="toPrint">
+        {{--        @dd($student->getTotalPrice())--}}
         <div class="col-6">
             <h3>Resúmen:</h3>
-            <h5>Precio unitario:
-                ${{$student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio}}</h5>
-            <h5>Descuento por cant. de egresados: {{$student->resumen ? $student->resumen->descuento_egresados : $student->event->getEventDiscountByAmountOfStudents()}}%</h5>
-            <h5>Descuento por día elegido: {{$student->event->getEventDiscountByDays($student->event->dia_id, $student->event->cantidad_egresados)}}%</h5>
-            <h5>Adultos + egresado:
-                ${{$student->resumen ? $student->resumen->precio_adulto_egresado : $student->getPriceOfAdults()}}</h5>
-            <h5>Menores de 12:
-                ${{$student->resumen ? $student->resumen->menores_12 : $student->getPriceOfMinorsOfTwelve()}}</h5>
-            <h5>Menores de 5: no pagan</h5>
-            <h5>Medio de pago: {{$student->medioDePago->metodo}}</h5>
-            <h5>IVA:
+            <h4>Precio unitario:
+                ${{$student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio}}</h4>
+            <h4>Descuento por cant. de
+                egresados: {{$student->resumen ? $student->resumen->descuento_egresados : $student->event->getEventDiscountByAmountOfStudents()}}
+                %</h4>
+            @if(isset($student->event->discount))
+                <h4>Descuento especial: {{$student->event->discount->descuento}}%</h4>
+            @endif
+            <h4>Descuento por día
+                elegido: {{$student->event->getEventDiscountByDays($student->event->dia_id, $student->event->cantidad_egresados)}}
+                %</h4>
+            <h4>Egresado: </h4>
+            <h6 class="d-block ms-3">1- {{$student->nombre}}:
+                ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}</h6>
+            <h4>Adultos:</h4>
+            @foreach($student->people->where('tipo', 'adulto') as $people)
+                @if($people->fuera_termino == 1)
+                    <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}: ${{$people->total}}</h6>
+                @else
+                    <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
+                        ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}</h6>
+                @endif
+
+            @endforeach
+            <h4>Menores de 12:</h4>
+            @foreach($student->people->where('tipo', 'menor_12') as $people)
+                @if($people->tipo == 'menor_12')
+                    @if($people->fuera_termino == 1)
+                        <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}: ${{$people->total}}</h6>
+                    @else
+                        <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
+                            ${{($student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)) / 2}}</h6>
+                    @endif
+
+                @endif
+            @endforeach
+            <h4>Menores de 5:</h4>
+            @foreach($student->people->where('tipo', 'menor_5') as $people)
+                <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
+                    $0</h6>
+            @endforeach
+            <h4>Medio de pago: {{$student->medioDePago->metodo}}</h4>
+            <h4>IVA:
                 ${{$student->resumen ? round($student->resumen->iva) :
             round(($student->getPriceOfMinorsOfTwelve() + $student->getPriceOfAdults())* $student->medioDePago->iva / 100)
-}}</h5>
+}}</h4>
             <h4>Total:
                 ${{$student->resumen ? $student->resumen->total : $student->getTotalPrice()}}</h4>
             <h4>Total pendiente:
                 ${{($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount())}}</h4>
         </div>
-        <div class="col-6">
+        <div class="position-absolute w-50" style="top:0; right: 0">
             <h3>Pagos:</h3>
             @if(count($student->payments))
-                <h5>Adelantos realizados:</h5>
+                <h4>Adelantos realizados:</h4>
                 @foreach($student->payments as $payment)
                     @if($payment->tipo == 'adelanto')
-                        <h6>${{$payment->amount}} el
-                            día {{\Illuminate\Support\Carbon::parse($payment->created_at)->add(1,'month')->format('d-m-Y')}}</h6>
+                        <h6 style="margin: 0; color: blue; cursor: pointer" onclick="deshacerAdelanto({{$payment->id}})">${{$payment->amount}} el día {{\Illuminate\Support\Carbon::parse($payment->created_at)->add(1,'month')->format('d-m-Y')}}</h6>
                     @endif
                 @endforeach
             @endif
 
-            <h5>Forma de pago: {{$student->paymentType->nombre}}</h5>
-            <h5>Interés: {{$student->paymentType->interes}}%</h5>
-            <h5>Fecha de
-                pago: {{\Illuminate\Support\Carbon::createFromFormat('Y-m-d', $student->fecha_pago)->format('d-m-Y')}}</h5>
+            <h4>Forma de pago: {{$student->paymentType->nombre}}</h4>
+            <h4>Interés: {{$student->paymentType->interes}}%</h4>
+            <h4>Fecha de
+                pago: {{\Illuminate\Support\Carbon::createFromFormat('Y-m-d', $student->fecha_pago)->format('d-m-Y')}}</h4>
             @if($student->paymentType->id != 1)
 
-                <h5>Fechas de cuotas:</h5>
+                <h4>Fechas de cuotas:</h4>
                 <div class="row">
                     @foreach($student->cuotas as $cuota)
                         <div class="col-4">
@@ -128,7 +159,7 @@
                                     el {{ Illuminate\Support\Carbon::parse($cuota->fecha_pago)->format('d-m-Y')}}</small>
                                 <small
                                     class="d-block mb-3">${{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->amount}}
-                                    {{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes ? '+ $'.\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes . ' de interés' : '' }}</small>
+                                    {{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes ? '+ $'.\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes . ' de interés por mora' : '' }}</small>
                             @endif
 
                         </div>
@@ -163,13 +194,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="create_graduate_party" action="{{route('store.student')}}" method="POST">
+                    <form id="create_graduate_party" action="{{route('store.invitado')}}" method="POST">
                         @csrf
                         <input class="" type="hidden" name="estudiante_id" value="{{$student->id}}" id="estudiante_id">
 
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre completo</label>
                             <input type="text" class="form-control" id="nombre" name="nombre">
+                        </div>
+
+                        <div class="mb-3" id="tipo">
+                            <label for="tipo" class="form-label">Tipo:</label>
+                            <select class="form-select" name="tipo">
+                                <option selected="true" disabled="disabled">Seleccionar tipo</option>
+                                <option value="adulto">Adulto</option>
+                                <option value="menor_12">Menor de 12</option>
+                                <option value="menor_5">Menor de 5</option>
+                            </select>
                         </div>
 
                         <div class="mb-3" id="menu_id">
@@ -218,7 +259,8 @@
 
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre completo</label>
-                                <input value="{{$family->nombre}}" type="text" class="form-control" id="nombre" name="nombre">
+                                <input value="{{$family->nombre}}" type="text" class="form-control" id="nombre"
+                                       name="nombre">
                             </div>
 
                             <div class="mb-3" id="menu_id">
@@ -227,7 +269,8 @@
                                     <option>Seleccionar menú especial</option>
                                     @if(isset($specialMenu))
                                         @foreach($specialMenu as $menu)
-                                            <option  {{$family->menu_especial == $menu->id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                            <option
+                                                {{$family->menu_especial == $menu->id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -235,7 +278,7 @@
 
                             <div class="mb-3" id="telefono">
                                 <label for="telefono" class="form-label">Teléfono:</label>
-                                <input  value="{{$family->telefono}}" type="text" class="form-control" name="telefono">
+                                <input value="{{$family->telefono}}" type="text" class="form-control" name="telefono">
                             </div>
 
                             <div class="modal-footer">
@@ -260,9 +303,8 @@
 
     <script>
 
-        function openEditModal(id)
-        {
-            $("#editFamily"+id).modal('show');
+        function openEditModal(id) {
+            $("#editFamily" + id).modal('show');
         }
 
         function closePrice(id) {
@@ -307,6 +349,51 @@
                     }
                 })
         }
+
+        // deshacerAdelanto
+        function deshacerAdelanto(id) {
+                        swal.fire({
+                            title: '<h1>¿Deseas deshacer este adelanto?</h1>',
+                            icon: 'question',
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            focusConfirm: false,
+                            confirmButtonText:
+                                'Si',
+                            cancelButtonText:
+                                'No',
+                        })
+                            .then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        url: `/api/deshacer-adelanto/${id}`,
+                                        method: "POST",
+                                        datatype: "json",
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                        },
+                                        success: function (response) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                // title: 'Oops...',
+                                                confirmButtonText:
+                                                    '<button id="delete_button" class="btn w-100 h-100">OK</button>',
+                                                title: '<h1>Cambios confirmados</h1>',
+                                                // footer: '<a href="">Why do I have this issue?</a>'
+                                            })
+                                                .then(function () {
+                                                    location.reload();
+                                                })
+
+                                        },
+                                    })
+                                } else if (result.isDenied) {
+                                    Swal.fire('No se registró ningún cambio', '', 'info')
+                                }
+                            })
+
+                }
 
 
         function pagarCuota(id) {
@@ -490,7 +577,7 @@
                                     document.getElementById('toPrint').innerHTML
                                 )
                                 .prepend(
-                                    '<img src="https://areacostaneraegresados.com/storage/images/Logo%20Area.png" style="position: absolute;top: 0;left: 50%; width: 500px; height: 500px; opacity: 0.1" />'
+                                    '<img src="https://areacostaneraegresados.com/storage/images/Logo%20Area.png" style="position: absolute; top: 50%;left: 50%;width: 500px; height: 500px;margin-top: -250px; margin-left: -250px; opacity: 0.1" />'
                                 );
 
                             $(win.document.body).find('table')
@@ -530,7 +617,8 @@
                             style="cursor:
                             pointer;
                             "> <i
-                            class="fa-solid fa-trash"></i> </a>`;;
+                            class="fa-solid fa-trash"></i> </a>`;
+                            ;
                         }
                     },
                 ]

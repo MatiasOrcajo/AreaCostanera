@@ -8,11 +8,14 @@
 @stop
 
 @section('content')
-    <h5>Lista de egresados:</h5>
-
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
         Agregar egresado
+    </button>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDiscount">
+        Añadir descuento
     </button>
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEvent">
@@ -22,6 +25,11 @@
     <button id="eliminarEvento" type="button" class="btn btn-danger">
         Eliminar
     </button>
+    <h5 class="d-block mt-3">Lista de egresados:</h5>
+    @if(isset($event->discount))
+        <small class="d-block mb-3">El evento tiene un descuento especial de {{$event->discount->descuento}}%</small>
+    @endif
+
 
     <div class="modal modal-center fade" id="editEvent" tabindex="-1"
          aria-labelledby="editEventLabel"
@@ -92,6 +100,36 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal modal-center fade" id="createDiscount" tabindex="-1"
+         aria-labelledby="createDiscountLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createDiscountLabel">Añadir descuento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create_graduate_party" action="{{route('create.discount', $event->id)}}" method="POST">
+                        @csrf
+
+                        <div class="mb-3" id="descuento">
+                            <label for="descuento" class="form-label">Descuento:</label>
+                            <input type="number" class="form-control" name="descuento">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal -->
     <div class="modal modal-center fade" id="createGraduateParty" tabindex="-1"
@@ -107,15 +145,6 @@
                     <form id="create_graduate_party" action="{{route('store.student')}}" method="POST">
                         @csrf
                         <input class="" type="hidden" name="event_id" value="{{$event->id}}" id="graduation_id">
-
-                        <div class="form-check mb-3">
-                            <input name="is_graduated" class="form-check-input" type="checkbox"
-                                   id="is_graduated"
-                                   checked>
-                            <label class="form-check-label" for="is_graduated">
-                                Es egresado
-                            </label>
-                        </div>
 
                         <div class="mb-3" id="estudiante_select">
                             <label for="estudiante_id" class="form-label">Grupo familiar:</label>
@@ -194,21 +223,6 @@
                                     @endforeach
                                 @endif
                             </select>
-                        </div>
-
-                        <div class="mb-3" id="familiares">
-                            <label for="familiares" class="form-label">Familiares totales:</label>
-                            <input name="familiares" type="number" class="form-control">
-                        </div>
-
-                        <div class="mb-3" id="menores_12">
-                            <label for="menores_12" class="form-label">Menores de 12:</label>
-                            <input name="menores_12" type="number" class="form-control">
-                        </div>
-
-                        <div class="mb-3" id="menores_5">
-                            <label for="menores_5" class="form-label">Menores de 5:</label>
-                            <input type="number" class="form-control" name="menores_5">
                         </div>
 
                         <div class="mb-3" id="email">

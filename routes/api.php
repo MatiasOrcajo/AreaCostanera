@@ -38,3 +38,7 @@ Route::get('interes', [\App\Http\Controllers\InteresCuotaController::class, 'lis
 Route::post('cerrar-precio/{estudiante}', [\App\Http\Controllers\StudentsController::class, 'closePrice']);
 
 Route::get('eventos-terminados', [\App\Http\Controllers\GraduatePartyController::class, 'listFinishedEvents'])->name('list.finishedEvents');
+
+Route::get('descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'listDiscounts'])->name('list.discounts');
+
+Route::post('deshacer-adelanto/{payment}', [\App\Http\Controllers\StudentsController::class, 'deleteAdvancedPayment']);

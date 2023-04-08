@@ -21,6 +21,9 @@ class CreateEstudianteFamiliaresTable extends Migration
             $table->foreignId('menu_especial')->nullable()->references('id')
                 ->on('menus_especiales');
             $table->unsignedBigInteger('telefono')->nullable();
+            $table->text('tipo');
+            $table->text('fuera_termino');
+            $table->unsignedBigInteger('total')->nullable();
             $table->timestamps();
         });
     }
