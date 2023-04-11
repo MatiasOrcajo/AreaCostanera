@@ -70,8 +70,8 @@
         <div class="col-6">
             <h3>Resúmen:</h3>
             <h4>Precio unitario:
-                ${{$student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio}}</h4>
-            <h4>Descuento por cant. de
+                ${{($student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio) - ($student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio) * $student->getTotalDiscounts() / 100}}</h4>
+            {{--<h4>Descuento por cant. de
                 egresados: {{$student->resumen ? $student->resumen->descuento_egresados : $student->event->getEventDiscountByAmountOfStudents()}}
                 %</h4>
             @if(isset($student->event->discount))
@@ -79,7 +79,7 @@
             @endif
             <h4>Descuento por día
                 elegido: {{$student->event->getEventDiscountByDays($student->event->dia_id, $student->event->cantidad_egresados)}}
-                %</h4>
+                %</h4>--}}
             <h4>Egresado: </h4>
             <h6 class="d-block ms-3">1- {{$student->nombre}}:
                 ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}</h6>
@@ -122,7 +122,7 @@
         </div>
         <div class="position-absolute w-50" style="top:0; right: 0">
             <h3>Pagos:</h3>
-            @if(count($student->payments))
+            @if(count($student->payments->where('tipo', 'adelanto')))
                 <h4>Adelantos realizados:</h4>
                 @foreach($student->payments as $payment)
                     @if($payment->tipo == 'adelanto')
@@ -132,7 +132,7 @@
             @endif
 
             <h4>Forma de pago: {{$student->paymentType->nombre}}</h4>
-            <h4>Interés: {{$student->paymentType->interes}}%</h4>
+            <h4>Interés por pago en cuotas: {{$student->paymentType->interes}}%</h4>
             <h4>Fecha de
                 pago: {{\Illuminate\Support\Carbon::createFromFormat('Y-m-d', $student->fecha_pago)->format('d-m-Y')}}</h4>
             @if($student->paymentType->id != 1)
@@ -159,7 +159,7 @@
                                     el {{ Illuminate\Support\Carbon::parse($cuota->fecha_pago)->format('d-m-Y')}}</small>
                                 <small
                                     class="d-block mb-3">${{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->amount}}
-                                    {{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes ? '+ $'.\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes . ' de interés por mora' : '' }}</small>
+                                    {{\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes ? '+ $'.\App\Models\Pago::where('estudiantes_cuotas_id', $cuota->id)->first()->interes . ' interés por mora' : '' }}</small>
                             @endif
 
                         </div>

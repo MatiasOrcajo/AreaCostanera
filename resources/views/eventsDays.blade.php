@@ -47,11 +47,6 @@
             <thead>
             <th></th>
             <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
             </thead>
         </table>
     </div>
@@ -76,36 +71,10 @@
                                 <input value="{{$day->nombre}}" type="text" class="form-control" id="nombre"
                                        name="nombre">
                             </div>
-                            <h4>Descuentos</h4>
                             <div class="mb-3">
-                                <label for="20_a_30" class="form-label">20 a 30:</label>
-                                <input value="{{$day->descuentos["descuento_20_a_30"]}}" type="number" class="form-control" id="20_a_30"
-                                       name="20_a_30">
-                            </div>
-                            <div class="mb-3">
-                                <label for="31_a_50" class="form-label">31 a 50:</label>
-                                <input value="{{$day->descuentos["descuento_31_a_50"]}}" type="number" class="form-control" id="31_a_50"
-                                       name="31_a_50">
-                            </div>
-                            <div class="mb-3">
-                                <label for="51_a_70" class="form-label">51 a 70:</label>
-                                <input value="{{$day->descuentos["descuento_51_a_70"]}}" type="number" class="form-control" id="51_a_70"
-                                       name="51_a_70">
-                            </div>
-                            <div class="mb-3">
-                                <label for="71_a_100" class="form-label">71 a 100:</label>
-                                <input value="{{$day->descuentos["descuento_71_a_100"]}}" type="number" class="form-control" id="71_a_100"
-                                       name="71_a_100">
-                            </div>
-                            <div class="mb-3">
-                                <label for="101_a_150" class="form-label">101 a 150:</label>
-                                <input value="{{$day->descuentos["descuento_101_a_150"]}}" type="number" class="form-control" id="101_a_150"
-                                       name="101_a_150">
-                            </div>
-                            <div class="mb-3">
-                                <label for="151_o_mas" class="form-label">151 o mas:</label>
-                                <input value="{{$day->descuentos["descuento_151_o_mas"]}}" type="number" class="form-control" id="151_o_mas"
-                                       name="151_o_mas">
+                                <label for="20_a_30" class="form-label">Descuento:</label>
+                                <input value="{{$day->descuento}}" type="number" class="form-control" id="20_a_30"
+                                       name="descuento">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -156,23 +125,8 @@
                     { title: "NOMBRE",
                         data: 'nombre'
                     },
-                    { title: "20 a 30",
-                        data: '20_a_30'
-                    },
-                    { title: "31 a 50",
-                        data: '31_a_50'
-                    },
-                    { title: "51 a 70",
-                        data: '51_a_70'
-                    },
-                    { title: "71 a 100",
-                        data: '71_a_100'
-                    },
-                    { title: "101 a 150",
-                        data: '101_a_150'
-                    },
-                    { title: "151 o mas",
-                        data: '151_o_mas'
+                    { title: "DESCUENTO",
+                        data: 'descuento'
                     },
                     {
                         title: "OPCION",

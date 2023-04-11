@@ -46,7 +46,7 @@ class Estudiante extends Model
         $adultsCount = count($this->people->where('tipo', 'adulto')) + 1;
         $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
 
-        return $adultsCount * $menuPrice;
+        return $adultsCount * $menuPrice - ($adultsCount * $menuPrice) * $this->getTotalDiscounts() / 100;
     }
 
     public function getPriceOfMinorsOfTwelve()
@@ -54,7 +54,7 @@ class Estudiante extends Model
         $minorsCount = count($this->people->where('tipo', 'menor_12'));
         $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
 
-        return ($minorsCount * $menuPrice) / 2;
+        return $minorsCount * $menuPrice / 2 - ($minorsCount * $menuPrice / 2) * $this->getTotalDiscounts() / 100;
     }
 
     public function payments()
@@ -67,19 +67,21 @@ class Estudiante extends Model
         return count($this->cuotas) - count($this->cuotas->where('status', 1));
     }
 
+    public function getTotalDiscounts()
+    {
+        $special_discount = $this->event->discount->descuento ?? 0;
+
+        return Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->day->descuento + $special_discount;
+    }
+
     public function getTotalPrice()
     {
         if ($this->resumen == null) {
             $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults();
-            $special_discount = $this->event->discount->descuento ?? 0;
-            //iva = 21% de (precio menores + precio adultos + precio egresado)+ (precio menores + precio adultos + precio egresado) * interes / 100
-            $porcentaje_descuentos = Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->getEventDiscountByDays($this->event->dia_id, $this->event->cantidad_egresados) + $special_discount;
 
             $total =
                 $total_adultos_egresado
-                + ($total_adultos_egresado * $this->paymentType->interes / 100)
-                - ($total_adultos_egresado + ($total_adultos_egresado * $this->paymentType->interes / 100))
-                * $porcentaje_descuentos / 100;
+                + ($total_adultos_egresado * $this->paymentType->interes / 100);
 
             $total += $total * $this->medioDePago->iva / 100;
 

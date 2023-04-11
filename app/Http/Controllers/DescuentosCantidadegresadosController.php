@@ -21,12 +21,12 @@ class DescuentosCantidadegresadosController extends Controller
         $data = DescuentosCantidadegresados::all()
                     ->map(function ($query){
                       return [
-                          "20_a_30" => $query->descuento_20_a_30,
-                          "31_a_50" => $query->descuento_31_a_50,
-                          "51_a_70" => $query->descuento_51_a_70,
-                          "71_a_100" => $query->descuento_71_a_100,
-                          "101_a_150" => $query->descuento_101_a_150,
-                          "151_o_mas" => $query->descuento_151_o_mas,
+                          "20_a_30" => $query->descuento_20_a_30.'%',
+                          "31_a_50" => $query->descuento_31_a_50.'%',
+                          "51_a_70" => $query->descuento_51_a_70.'%',
+                          "71_a_100" => $query->descuento_71_a_100.'%',
+                          "101_a_150" => $query->descuento_101_a_150.'%',
+                          "151_o_mas" => $query->descuento_151_o_mas.'%',
                       ]  ;
                     });
 

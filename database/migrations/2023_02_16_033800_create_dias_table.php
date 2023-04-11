@@ -16,6 +16,7 @@ class CreateDiasTable extends Migration
         Schema::create('dias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->unsignedBigInteger('descuento')->nullable()->default(0);
             $table->timestamps();
         });
     }
