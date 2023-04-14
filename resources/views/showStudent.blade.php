@@ -15,6 +15,8 @@
         {{--            cargados</small>--}}
         <small>{{$student->resumen ? 'El precio está cerrado': 'El precio está sin cerrar'}}</small>
         <br>
+        <small>El egresado tiene un descuento de {{$student->descuento_especial}}%</small>
+        <br>
     </div>
     <a href="{{route('show.graduate', $student->event->slug)}}" style="text-decoration: none">
         <button type="button" class="btn btn-primary">
@@ -31,6 +33,41 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#informarPago">
         Registrar adelanto
     </button>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDiscount">
+        {{$student->descuento_especial != 0 ? 'Editar descuento' : 'Añadir descuento'}}
+    </button>
+
+    <!-- Modal -->
+    <div class="modal modal-center fade" id="createDiscount" tabindex="-1"
+         aria-labelledby="createDiscountLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createDiscountLabel">Añadir descuento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create_graduate_party" action="{{route('create.studentDiscount', $student->id)}}" method="POST">
+                        @csrf
+
+                        <div class="mb-3" id="descuento">
+                            <label for="descuento" class="form-label">Descuento:</label>
+                            <input value="{{$student->descuento_especial}}" type="number" step="0.01" class="form-control" name="descuento">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal modal-center fade" id="informarPago" tabindex="-1"
          aria-labelledby="informarPagoLabel"

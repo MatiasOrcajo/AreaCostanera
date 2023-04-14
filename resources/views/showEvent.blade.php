@@ -14,9 +14,11 @@
     </button>
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDiscount">
-        Añadir descuento
-    </button>
+    @if(!$event->discount)
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDiscount">
+            Añadir descuento
+        </button>
+    @endif
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editEvent">
         Editar evento
@@ -27,8 +29,38 @@
     </button>
     <h5 class="d-block mt-3">Lista de egresados:</h5>
     @if(isset($event->discount))
-        <small class="d-block mb-3">El evento tiene un descuento especial de {{$event->discount->descuento}}%</small>
+        <small onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un descuento especial de {{$event->discount->descuento}}%</small>
     @endif
+
+    <!-- Modal -->
+    <div class="modal modal-center fade" id="editDiscount" tabindex="-1"
+         aria-labelledby="editDiscountLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editDiscountLabel">Añadir descuento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create_graduate_party" action="{{route('edit.discount', $event->id)}}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3" id="descuento">
+                            <label for="descuento" class="form-label">Descuento:</label>
+                            <input value="{{$event->discount ? $event->discount->descuento : 0}}" type="number" step="0.01" class="form-control" name="descuento">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
     <div class="modal modal-center fade" id="editEvent" tabindex="-1"
@@ -116,7 +148,7 @@
 
                         <div class="mb-3" id="descuento">
                             <label for="descuento" class="form-label">Descuento:</label>
-                            <input type="number" class="form-control" name="descuento">
+                            <input type="number" step="0.01" class="form-control" name="descuento">
                         </div>
 
                         <div class="modal-footer">
@@ -341,23 +373,6 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3" id="familiares">
-                                    <label for="familiares" class="form-label">Familiares totales:</label>
-                                    <input value="{{$graduate->familiares}}" name="familiares" type="number" class="form-control">
-                                </div>
-
-                                <div class="mb-3" id="menores_12">
-                                    <label for="menores_12" class="form-label">Menores de 12:</label>
-                                    <input value="{{$graduate->menores_12}}" name="menores_12" type="number"
-                                           class="form-control">
-                                </div>
-
-                                <div class="mb-3" id="menores_5">
-                                    <label for="menores_5" class="form-label">Menores de 5:</label>
-                                    <input value="{{$graduate->menores_5}}" type="number" class="form-control"
-                                           name="menores_5">
-                                </div>
-
                                 <div class="mb-3" id="email">
                                     <label for="email" class="form-label">Email:</label>
                                     <input value="{{$graduate->email}}" type="email" class="form-control" name="email">
@@ -426,7 +441,7 @@
                                     // footer: '<a href="">Why do I have this issue?</a>'
                                 })
                                     .then(function(){
-                                        history.go(-1);
+                                        location.replace('{{route('dashboard')}}')
                                     })
                             },
                         })
@@ -440,6 +455,11 @@
         function openEditModal(id)
         {
             $("#editGraduate"+id).modal('show');
+        }
+
+        function editDiscount()
+        {
+            $("#editDiscount").modal('show');
         }
 
 

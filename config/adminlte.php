@@ -354,7 +354,7 @@ return [
                     'url'  => '/admin/menu-especial',
                 ],
                 [
-                    'text' => 'Editar Intereses de Cuotas',
+                    'text' => 'Editar Intereses de Mora',
                     'icon' => 'fa-solid fa-coins',
                     'url'  => '/admin/intereses-cuotas',
                 ],

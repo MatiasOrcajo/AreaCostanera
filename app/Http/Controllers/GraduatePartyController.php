@@ -151,4 +151,13 @@ class GraduatePartyController extends Controller
         return back();
     }
 
+    public function editDiscount(Request $request, Egresados $event)
+    {
+
+        $event->discount->descuento = $request->descuento;
+        $event->discount->save();
+
+        return back();
+    }
+
 }

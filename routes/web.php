@@ -79,6 +79,10 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::post('/admin/create-discount/{event}', [GraduatePartyController::class, 'createDiscount'])->name('create.discount');
 
+    Route::put('/admin/edit-discount/{event}', [GraduatePartyController::class, 'editDiscount'])->name('edit.discount');
+
+    Route::post('/admin/create-student-discount/{student}', [\App\Http\Controllers\StudentsController::class, 'createDiscount'])->name('create.studentDiscount');
+
     Route::get('/admin/descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'index']);
 
     Route::put('/admin/descuentos-egresados-editar', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'edit'])->name('edit.discounts');

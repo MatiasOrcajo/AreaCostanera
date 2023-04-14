@@ -101,7 +101,7 @@
             <div class="d-flex flex-wrap align-items-center">
                 @foreach($graduateParties as $event)
                     @if($event)
-                        <div class=" col-6 rounded m-3 w-3 h-3 p-2"
+                        <div class=" col-5 rounded m-3 w-3 h-3 p-2"
                              style="{{$event->getDateStatusCss()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
                             <a href="{{route('show.graduate', $event->slug)}}">
                                 <div class="col-10">
