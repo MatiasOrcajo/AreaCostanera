@@ -14,7 +14,7 @@ class AlterEgresadoDescuentoTable extends Migration
     public function up()
     {
         Schema::table('egresado_descuentos', function (Blueprint $table) {
-            $table->float('descuento');
+            $table->float('descuento')->change();
         });
     }
 
