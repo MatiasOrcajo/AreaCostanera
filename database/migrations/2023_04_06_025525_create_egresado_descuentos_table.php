@@ -15,7 +15,7 @@ class CreateEgresadoDescuentosTable extends Migration
     {
         Schema::create('egresado_descuentos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('descuento');
+            $table->float('descuento');
             $table->foreignId('egresado_id')->references('id')
                 ->on('egresados')->onDelete('cascade');
             $table->timestamps();
