@@ -112,6 +112,9 @@ class StudentsController extends Controller
             case '12 cuotas':
                 $cuotas = 12;
                 break;
+            default:
+                $cuotas = 1;
+                break;
 
         }
 

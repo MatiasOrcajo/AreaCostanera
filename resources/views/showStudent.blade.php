@@ -17,6 +17,10 @@
         <br>
         <small>El egresado tiene un descuento de {{$student->descuento_especial}}%</small>
         <br>
+        <small>Descuento por cantidad de egresados: {{$student->event->getEventDiscountByAmountOfStudents()}}%</small>
+        <br>
+        <small>Descuento por día elegido: {{$student->event->day->descuento}}%</small>
+        <br>
     </div>
     <a href="{{route('show.graduate', $student->event->slug)}}" style="text-decoration: none">
         <button type="button" class="btn btn-primary">
@@ -119,7 +123,7 @@
                 %</h4>--}}
             <h4>Egresado: </h4>
             <h6 class="d-block ms-3">1- {{$student->nombre}}:
-                ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}</h6>
+                ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1) - ($student->event->menu->precio * $student->descuento_especial / 100)}}</h6>
             <h4>Adultos:</h4>
             @foreach($student->people->where('tipo', 'adulto') as $people)
                 @if($people->fuera_termino == 1)
@@ -163,7 +167,7 @@
                 <h4>Adelantos realizados:</h4>
                 @foreach($student->payments as $payment)
                     @if($payment->tipo == 'adelanto')
-                        <h6 style="margin: 0; color: blue; cursor: pointer" onclick="deshacerAdelanto({{$payment->id}})">${{$payment->amount}} el día {{\Illuminate\Support\Carbon::parse($payment->created_at)->add(1,'month')->format('d-m-Y')}}</h6>
+                        <h6 style="margin: 0; color: blue; cursor: pointer" onclick="deshacerAdelanto({{$payment->id}})">${{$payment->amount}} el día {{\Illuminate\Support\Carbon::parse($payment->created_at)->format('d-m-Y')}}</h6>
                     @endif
                 @endforeach
             @endif
@@ -172,7 +176,6 @@
             <h4>Interés por pago en cuotas: {{$student->paymentType->interes}}%</h4>
             <h4>Fecha de
                 pago: {{\Illuminate\Support\Carbon::createFromFormat('Y-m-d', $student->fecha_pago)->format('d-m-Y')}}</h4>
-            @if($student->paymentType->id != 1)
 
                 <h4>Fechas de cuotas:</h4>
                 <div class="row">
@@ -183,9 +186,10 @@
                             @if($cuota->status == 0)
                                 @if(\Illuminate\Support\Carbon::now() > \Illuminate\Support\Carbon::parse($cuota->fecha_estipulada))
                                     <small>Impaga</small>
+                                <br>
                                     <small>Deuda con interés por mora</small>
                                     <small
-                                        class="d-block mb-3">${{round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount())}}</small>
+                                        class="d-block mb-3">${{round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount())}} + ${{(round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount())) * \App\Models\InteresCuota::first()->interes/ 100}}</small>
                                 @else
                                     <small>Impaga</small>
                                     <small
@@ -202,8 +206,6 @@
                         </div>
                     @endforeach
                 </div>
-
-            @endif
 
         </div>
 

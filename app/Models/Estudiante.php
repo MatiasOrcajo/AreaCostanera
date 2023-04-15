@@ -71,13 +71,16 @@ class Estudiante extends Model
     {
         $special_discount = $this->event->discount->descuento ?? 0;
 
-        return Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->day->descuento + $special_discount + $this->descuento_especial;
+        return Egresados::find($this->egresado_id)->getEventDiscountByAmountOfStudents() + $this->event->day->descuento + $special_discount;
     }
 
     public function getTotalPrice()
     {
         if ($this->resumen == null) {
-            $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults();
+            $descuentoParaMenuDelEgresado = $this->event->menu->precio * $this->descuento_especial / 100;
+
+            $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults() - $descuentoParaMenuDelEgresado;
+
 
             $total =
                 $total_adultos_egresado
