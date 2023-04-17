@@ -123,14 +123,25 @@
                 %</h4>--}}
             <h4>Egresado: </h4>
             <h6 class="d-block ms-3">1- {{$student->nombre}}:
-                ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1) - ($student->event->menu->precio * $student->descuento_especial / 100)}}</h6>
+                @if($student->resumen)
+                    ${{$student->resumen->precio_adulto_egresado / (count($student->people->where('tipo', 'adulto')) + 1) - ($student->resumen->precio_adulto_egresado * $student->descuento_especial / 100)}}
+                @else
+                    ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1) - ($student->event->menu->precio * $student->descuento_especial / 100)}}
+                @endif
+            </h6>
             <h4>Adultos:</h4>
             @foreach($student->people->where('tipo', 'adulto') as $people)
                 @if($people->fuera_termino == 1)
                     <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}: ${{$people->total}}</h6>
                 @else
                     <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
-                        ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}</h6>
+                        @if($student->resumen)
+                            ${{$student->resumen->precio_adulto_egresado / (count($student->people->where('tipo', 'adulto')) + 1)}}
+                        @else
+                            ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')) + 1)}}
+                        @endif
+
+                    </h6>
                 @endif
 
             @endforeach
