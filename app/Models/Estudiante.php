@@ -41,22 +41,6 @@ class Estudiante extends Model
         return $this->belongsTo(MediosPago::class, 'medio_pago_id');
     }
 
-    public function getPriceOfAdults()
-    {
-        $adultsCount = count($this->people->where('tipo', 'adulto')) + 1;
-        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
-
-        return $adultsCount * $menuPrice - ($adultsCount * $menuPrice) * $this->getTotalDiscounts() / 100;
-    }
-
-    public function getPriceOfMinorsOfTwelve()
-    {
-        $minorsCount = count($this->people->where('tipo', 'menor_12'));
-        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
-
-        return $minorsCount * $menuPrice / 2 - ($minorsCount * $menuPrice / 2) * $this->getTotalDiscounts() / 100;
-    }
-
     public function payments()
     {
         return $this->hasMany(Pago::class, 'estudiante_id');
@@ -65,6 +49,23 @@ class Estudiante extends Model
     public function getRemainingDuesCount()
     {
         return count($this->cuotas) - count($this->cuotas->where('status', 1));
+    }
+
+    public function getPriceOfAdults()
+    {
+        $adultsCount = count($this->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1;
+        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
+
+
+        return $adultsCount * $menuPrice - ($adultsCount * $menuPrice) * $this->getTotalDiscounts() / 100;
+    }
+
+    public function getPriceOfMinorsOfTwelve()
+    {
+        $minorsCount = count($this->people->where('tipo', 'menor_12')->where('fuera_termino', 0));
+        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
+
+        return $minorsCount * $menuPrice / 2 - ($minorsCount * $menuPrice / 2) * $this->getTotalDiscounts() / 100;
     }
 
     public function getTotalDiscounts()
@@ -90,6 +91,7 @@ class Estudiante extends Model
 
         } else {
 //            $invitados_fuera_termino = array_sum($this->people->where('fuera_termino', 1)->pluck('total')->toArray());
+
             $total = $this->resumen->total;
         }
 

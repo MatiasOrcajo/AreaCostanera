@@ -365,7 +365,7 @@
                                         </option>
                                         @if(isset($mediosPago))
                                             @foreach($mediosPago as $formaPago)
-                                                <option {{$formaPago->id == $graduate->forma_pago_id ? 'selected' : ''}}
+                                                <option {{$formaPago->id == $graduate->medio_pago_id ? 'selected' : ''}}
                                                         value="{{$formaPago->id}}">{{$formaPago->metodo}}
                                                 </option>
                                             @endforeach

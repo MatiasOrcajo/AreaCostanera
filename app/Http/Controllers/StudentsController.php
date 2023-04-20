@@ -229,7 +229,7 @@ class StudentsController extends Controller
         $resumen->descuento_egresados = $estudiante->event->getEventDiscountByAmountOfStudents();
         $resumen->precio_adulto_egresado = $estudiante->getPriceOfAdults();
         $resumen->menores_12 = $estudiante->getPriceOfMinorsOfTwelve();
-        $resumen->iva = $estudiante->getTotalPrice() * $estudiante->medioDePago->iva / 100;
+        $resumen->iva = ($estudiante->getPriceOfMinorsOfTwelve() + $estudiante->getPriceOfAdults()) * $estudiante->medioDePago->iva / 100;
         $resumen->total = $estudiante->getTotalPrice();
 
         $resumen->save();
@@ -239,6 +239,14 @@ class StudentsController extends Controller
 
     public function createDiscount(Request $request, Estudiante $student)
     {
+        //actualizo el total del resumen con el nuevo descuento
+        if($student->resumen){
+            $descuentoEspecialEnPesos = $student->resumen->precio_unitario * $student->descuento_especial / 100;
+            $student->resumen->total += $descuentoEspecialEnPesos;
+            $student->resumen->total -= $student->resumen->precio_unitario * $request->descuento / 100;
+            $student->resumen->save();
+        }
+
         $student->descuento_especial = $request->descuento;
         $student->save();
 
