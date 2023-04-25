@@ -126,7 +126,7 @@
             <h4>Egresado: </h4>
             <h6 class="d-block ms-3">1- {{$student->nombre}}:
                 @if($student->resumen)
-                    ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0))  ) - ($student->resumen->precio_unitario * $student->descuento_especial / 100)}}
+                    ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1  ) - ($student->resumen->precio_unitario * $student->descuento_especial / 100)}}
                 @else
                     ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1) - ($student->event->menu->precio * $student->descuento_especial / 100)}}
                 @endif

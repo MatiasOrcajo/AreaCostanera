@@ -211,6 +211,8 @@ class StudentsController extends Controller
         $pago->tipo = 'adelanto';
         $pago->save();
 
+
+
         return back();
     }
 

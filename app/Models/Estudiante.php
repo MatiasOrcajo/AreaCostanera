@@ -84,8 +84,8 @@ class Estudiante extends Model
 
 
             $total =
-                $total_adultos_egresado
-                + ($total_adultos_egresado * $this->paymentType->interes / 100);
+                $total_adultos_egresado - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray())
+                + ($total_adultos_egresado - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray()) * $this->paymentType->interes / 100);
 
             $total += $total * $this->medioDePago->iva / 100;
 
@@ -110,7 +110,7 @@ class Estudiante extends Model
 
     public function getTotalPriceWithAdvancePayments()
     {
-        return round($this->getTotalPrice() - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray()));
+        return round($this->getTotalPrice());
     }
 
     public function calculateDuesAmount()
