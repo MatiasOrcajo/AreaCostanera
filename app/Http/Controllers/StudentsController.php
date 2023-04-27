@@ -228,11 +228,13 @@ class StudentsController extends Controller
         $resumen = new EstudiantesResumen();
         $resumen->estudiante_id = $estudiante->id;
         $resumen->precio_unitario = $estudiante->event->menu->precio;
-        $resumen->descuento_egresados = $estudiante->event->getEventDiscountByAmountOfStudents();
-        $resumen->precio_adulto_egresado = $estudiante->getPriceOfAdults();
-        $resumen->menores_12 = $estudiante->getPriceOfMinorsOfTwelve();
-        $resumen->iva = ($estudiante->getPriceOfMinorsOfTwelve() + $estudiante->getPriceOfAdults()) * $estudiante->medioDePago->iva / 100;
-        $resumen->total = $estudiante->getTotalPrice();
+        $resumen->precio_unitario_descuentos = $estudiante->getPriceOfAdults() / (count($estudiante->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1);
+        $resumen->interes_cuotas = $estudiante->paymentType->interes;
+        $resumen->descuento_cantidad_egresados = $estudiante->event->getEventDiscountByAmountOfStudents();
+        $resumen->descuento_estudiante = $estudiante->descuento_especial;
+        $resumen->descuento_dia_elegido = $estudiante->event->day->descuento;
+        $resumen->iva = round(($estudiante->getPriceOfMinorsOfTwelve() + $estudiante->getPriceOfAdults()) * $estudiante->medioDePago->iva / 100);
+        $resumen->total = round($estudiante->getTotalPrice());
 
         $resumen->save();
 

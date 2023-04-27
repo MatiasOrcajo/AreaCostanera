@@ -15,11 +15,11 @@
         {{--            cargados</small>--}}
         <small>{{$student->resumen ? 'El precio está cerrado': 'El precio está sin cerrar'}}</small>
         <br>
-        <small>El egresado tiene un descuento de {{$student->descuento_especial}}%</small>
+        <small>El egresado tiene un descuento de {{$student->resumen ? $student->resumen->descuento_estudiante : $student->descuento_especial}}%</small>
         <br>
-        <small>Descuento por cantidad de egresados: {{$student->event->getEventDiscountByAmountOfStudents()}}%</small>
+        <small>Descuento por cantidad de egresados: {{$student->resumen ? $student->resumen->descuento_cantidad_egresados : $student->event->getEventDiscountByAmountOfStudents()}}%</small>
         <br>
-        <small>Descuento por día elegido: {{$student->event->day->descuento}}%</small>
+        <small>Descuento por día elegido: {{$student->resumen ? $student->resumen->descuento_dia_elegido : $student->event->day->descuento}}%</small>
         <br>
     </div>
     <a href="{{route('show.graduate', $student->event->slug)}}" style="text-decoration: none">
@@ -114,15 +114,6 @@
             <h3>Resúmen:</h3>
             <h4>Precio unitario:
                 ${{($student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio) - ($student->resumen ? $student->resumen->precio_unitario: $student->event->menu->precio) * $student->getTotalDiscounts() / 100}}</h4>
-            {{--<h4>Descuento por cant. de
-                egresados: {{$student->resumen ? $student->resumen->descuento_egresados : $student->event->getEventDiscountByAmountOfStudents()}}
-                %</h4>
-            @if(isset($student->event->discount))
-                <h4>Descuento especial: {{$student->event->discount->descuento}}%</h4>
-            @endif
-            <h4>Descuento por día
-                elegido: {{$student->event->getEventDiscountByDays($student->event->dia_id, $student->event->cantidad_egresados)}}
-                %</h4>--}}
             <h4>Egresado: </h4>
             <h6 class="d-block ms-3">1- {{$student->nombre}}:
                 @if($student->resumen)
@@ -140,7 +131,7 @@
                 @else
                     <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
                         @if($student->resumen)
-                            ${{$student->resumen->precio_adulto_egresado / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1)}}
+                            ${{$student->resumen->precio_unitario_descuentos}}
                         @else
                             ${{$student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1)}}
                         @endif
@@ -156,7 +147,7 @@
                         <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}: ${{$people->total}}</h6>
                     @else
                         <h6 class="d-block ms-3">{{$loop->iteration}}- {{$people->nombre}}:
-                            ${{($student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1)) / 2}}</h6>
+                            ${{($student->resumen ? $student->resumen->precio_unitario_descuentos : $student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1)) / 2}}</h6>
                     @endif
 
                 @endif
@@ -190,7 +181,7 @@
             @endif
 
             <h4>Forma de pago: {{$student->paymentType->nombre}}</h4>
-            <h4>Interés por pago en cuotas: {{$student->paymentType->interes}}%</h4>
+            <h4>Interés por pago en cuotas: {{$student->resumen ? $student->resumen->interes_cuotas : $student->paymentType->interes}}%</h4>
             <h4>Fecha de
                 pago: {{\Illuminate\Support\Carbon::createFromFormat('Y-m-d', $student->fecha_pago)->format('d-m-Y')}}</h4>
 

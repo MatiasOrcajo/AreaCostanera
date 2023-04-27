@@ -51,11 +51,17 @@ class Estudiante extends Model
         return count($this->cuotas) - count($this->cuotas->where('status', 1));
     }
 
+    public function getPriceOfStudent()
+    {
+        $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
+
+        return $menuPrice - $menuPrice * $this->getTotalDiscounts() / 100;
+    }
+
     public function getPriceOfAdults()
     {
         $adultsCount = count($this->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1;
         $menuPrice = $this->resumen ? $this->resumen->precio_unitario : Egresados::find($this->egresado_id)->menu->precio;
-
 
         return $adultsCount * $menuPrice - ($adultsCount * $menuPrice) * $this->getTotalDiscounts() / 100;
     }
@@ -82,17 +88,19 @@ class Estudiante extends Model
 
             $total_adultos_egresado = $this->getPriceOfMinorsOfTwelve() + $this->getPriceOfAdults() - $descuentoParaMenuDelEgresado;
 
+            $firstTotal = $total_adultos_egresado - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray());
 
             $total =
-                $total_adultos_egresado - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray())
-                + ($total_adultos_egresado - array_sum($this->payments->where('tipo', 'adelanto')->pluck('amount')->toArray()) * $this->paymentType->interes / 100);
+                $firstTotal + ($firstTotal * $this->paymentType->interes / 100);
 
             $total += $total * $this->medioDePago->iva / 100;
 
-        } else {
-//            $invitados_fuera_termino = array_sum($this->people->where('fuera_termino', 1)->pluck('total')->toArray());
+            if($total < 0) $total = 0;
 
+        } else {
             $total = $this->resumen->total;
+
+            if($total < 0) $total = 0;
         }
 
         return round($total);
