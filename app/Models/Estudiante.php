@@ -95,12 +95,12 @@ class Estudiante extends Model
 
             $total += $total * $this->medioDePago->iva / 100;
 
-            if($total < 0) $total = 0;
+            if($total < 100) $total = 0;
 
         } else {
             $total = $this->resumen->total;
 
-            if($total < 0) $total = 0;
+            if($total < 100) $total = 0;
         }
 
         return round($total);
