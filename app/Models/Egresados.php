@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -62,6 +63,11 @@ class Egresados extends Model
     public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function invited(): HasManyThrough
+    {
+        return $this->hasManyThrough(EstudianteFamiliares::class, Estudiante::class, 'egresado_id', 'estudiante_id')->orderBy('nombre');
     }
 
     public function day()

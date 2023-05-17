@@ -42,3 +42,12 @@ Route::get('eventos-terminados', [\App\Http\Controllers\GraduatePartyController:
 Route::get('descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'listDiscounts'])->name('list.discounts');
 
 Route::post('deshacer-adelanto/{payment}', [\App\Http\Controllers\StudentsController::class, 'deleteAdvancedPayment']);
+
+/**
+ * Listados de evento
+ */
+Route::get('listar-egresados/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listStudentsTable'])->name('list.students.table');
+
+Route::get('listar-invitados/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listGuestsTable'])->name('list.guests.table');
+
+Route::get('listar-especiales/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listMenusTable'])->name('list.menus.table');

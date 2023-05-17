@@ -328,6 +328,17 @@ return [
             'url'  => 'admin/escuelas',
             'icon' => 'fa-solid fa-graduation-cap',
         ],
+        [
+            'text'    => 'Informes',
+            'icon'    => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'Editar Menús',
+                    'icon' => 'fa-solid fa-utensils',
+                    'url'  => '/admin/menus',
+                ],
+            ],
+        ],
         ['header' => 'CONFIGURACIONES'],
         [
             'text'    => 'Desplegar',

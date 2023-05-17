@@ -24,6 +24,12 @@
         Editar evento
     </button>
 
+    <a href="{{route('list.event', $event->id)}}" style="text-decoration: none">
+        <button type="button" class="btn btn-primary">
+            Ver Listados
+        </button>
+    </a>
+
     <button id="eliminarEvento" type="button" class="btn btn-danger">
         Eliminar
     </button>

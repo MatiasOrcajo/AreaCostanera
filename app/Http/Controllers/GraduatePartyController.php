@@ -129,11 +129,11 @@ class GraduatePartyController extends Controller
 
     public function listFinishedEvents()
     {
-        $data = Egresados::where('fecha_carbon', '<', Carbon::now())->get()->map(function ($query){
+        $data = Egresados::where('fecha_carbon', '<', Carbon::now())->get()->map(function ($query) {
             return [
-              "evento" => 'Escuela '.Escuela::find($query->escuela_id)->nombre.', curso '.$query->curso,
+                "evento" => 'Escuela ' . Escuela::find($query->escuela_id)->nombre . ', curso ' . $query->curso,
                 "fecha" => $query->fecha,
-              "slug" => $query->slug
+                "slug" => $query->slug
             ];
         });
 
@@ -158,6 +158,54 @@ class GraduatePartyController extends Controller
         $event->discount->save();
 
         return back();
+    }
+
+    public function showStudentsList(Egresados $event)
+    {
+        return view('showEventStudentsList', compact('event'));
+    }
+
+    public function listStudentsTable(Egresados $event)
+    {
+        $data = $event->persons->map(function ($query) {
+            return [
+                "nombre" => $query->nombre
+            ];
+        });
+
+        return DataTables::of($data)->make(true);
+    }
+
+    public function listGuestsTable(Egresados $event)
+    {
+        $data = $event->invited->map(function ($query) {
+            return [
+                "nombre" => $query->nombre,
+                "telefono" => $query->telefono
+            ];
+        });
+
+        return DataTables::of($data)->make(true);
+    }
+
+    public function listMenusTable(Egresados $event)
+    {
+        $data = $event->invited->whereNotNull('menu_especial')->map(function ($query) {
+            return [
+                "nombre" => $query->nombre,
+                "menu" => MenuEspecial::find($query->menu_especial)
+                    ->nombre
+            ];
+        });
+
+        $data = $data->concat($event->persons->whereNotNull('menu_especial_id')->map(function ($query) {
+            return [
+                "nombre" => $query->nombre,
+                "menu" => MenuEspecial::find($query->menu_especial_id)->nombre
+            ];
+        }));
+
+        return DataTables::of($data)->make(true);
     }
 
 }

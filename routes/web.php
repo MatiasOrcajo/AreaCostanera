@@ -86,6 +86,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/admin/descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'index']);
 
     Route::put('/admin/descuentos-egresados-editar', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'edit'])->name('edit.discounts');
+
+    //** listados de evento */
+    Route::get('/admin/listar/{event}', [GraduatePartyController::class, 'showStudentsList'])->name('list.event');
 });
 
 
