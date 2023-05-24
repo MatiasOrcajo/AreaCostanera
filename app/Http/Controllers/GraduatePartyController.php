@@ -208,4 +208,17 @@ class GraduatePartyController extends Controller
         return DataTables::of($data)->make(true);
     }
 
+    public function eventDebtors(Egresados $event)
+    {
+        $debtors = $event->installmentsForThisEvent->where('status', 0)->where('fecha_estipulada', '<', Carbon::now());
+        $data = $debtors->map(function($query){
+           return[
+               'nombre' => Estudiante::find($query->estudiante_id)->nombre,
+               'fecha_estipulada' => Carbon::parse($query->fecha_estipulada)->format('d-m-Y')
+           ] ;
+        });
+
+        return DataTables::of($data)->make(true);
+    }
+
 }

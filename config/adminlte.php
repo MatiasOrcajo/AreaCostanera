@@ -333,11 +333,21 @@ return [
             'icon'    => 'fas fa-fw fa-share',
             'submenu' => [
                 [
-                    'text' => 'Editar Menús',
-                    'icon' => 'fa-solid fa-utensils',
-                    'url'  => '/admin/menus',
+                    'text' => 'De Eventos',
+                    'icon' => 'fa-solid fa-circle-info',
+                    'url'  => '/admin/informes/eventos',
+                ],
+                [
+                    'text' => 'De Temporadas',
+                    'icon' => 'fa-solid fa-circle-info',
+                    'url'  => '/admin/informes/temporadas',
                 ],
             ],
+        ],
+        [
+            'text' => 'Eventos terminados',
+            'icon' => 'fa-solid fa-list',
+            'url'  => '/admin/eventos-terminados',
         ],
         ['header' => 'CONFIGURACIONES'],
         [
@@ -374,11 +384,7 @@ return [
                     'icon' => 'fa-solid fa-percent',
                     'url'  => '/admin/descuentos-egresados',
                 ],
-                [
-                    'text' => 'Eventos terminados',
-                    'icon' => 'fa-solid fa-list',
-                    'url'  => '/admin/eventos-terminados',
-                ],
+
 //                <i class=""></i>
             ],
         ],

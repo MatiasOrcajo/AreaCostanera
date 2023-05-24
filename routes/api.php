@@ -51,3 +51,17 @@ Route::get('listar-egresados/{event}', [\App\Http\Controllers\GraduatePartyContr
 Route::get('listar-invitados/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listGuestsTable'])->name('list.guests.table');
 
 Route::get('listar-especiales/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listMenusTable'])->name('list.menus.table');
+
+Route::get('listar-deudores/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'eventDebtors'])->name('list.debtors.table');
+
+/**
+ * INFORMES
+ */
+
+Route::get('informes-eventos', [\App\Http\Controllers\ReportsController::class, 'eventsList'])->name('list.events.for.report');
+
+Route::get('informes-eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'listPaymentsForEvent'])->name('list.event.reports');
+
+Route::get('informes-temporadas-list', [\App\Http\Controllers\ReportsController::class, 'listPaymentsByDates'])->name('list.payments');
+
+//listPaymentsByDates

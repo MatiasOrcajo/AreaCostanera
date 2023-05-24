@@ -65,11 +65,6 @@ class Egresados extends Model
         return $this->belongsTo(Menu::class, 'menu_id');
     }
 
-    public function invited(): HasManyThrough
-    {
-        return $this->hasManyThrough(EstudianteFamiliares::class, Estudiante::class, 'egresado_id', 'estudiante_id')->orderBy('nombre');
-    }
-
     public function day()
     {
         return $this->belongsTo(Dia::class, 'dia_id');
@@ -107,6 +102,34 @@ class Egresados extends Model
     public function discount()
     {
         return $this->hasOne(EgresadoDescuento::class, 'egresado_id');
+    }
+
+    public function invited(): HasManyThrough
+    {
+        return $this->hasManyThrough(EstudianteFamiliares::class, Estudiante::class, 'egresado_id', 'estudiante_id')->orderBy('nombre');
+    }
+
+    /**
+     * Returns all student that have unpaid installments
+     */
+    public function installmentsForThisEvent()
+    {
+        return $this->hasManyThrough(EstudianteCuota::class, Estudiante::class, 'egresado_id', 'estudiante_id')->orderBy('fecha_estipulada');
+    }
+
+    /**
+     * Returns payments made by event's students
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|HasMany[]
+     */
+    public function payments()
+    {
+        return $this->persons()->whereHas('payments')->with('payments')->get();
+    }
+
+    public function electronicsPayments()
+    {
+
     }
 
 }
