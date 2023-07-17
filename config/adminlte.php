@@ -329,9 +329,10 @@ return [
             'icon' => 'fa-solid fa-graduation-cap',
         ],
         [
-            'text'    => 'Informes',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
+            'text'      => 'Informes',
+            'icon'      => 'fas fa-fw fa-share',
+            'can'       => 'superadmin',
+            'submenu'   => [
                 [
                     'text' => 'De Eventos',
                     'icon' => 'fa-solid fa-circle-info',

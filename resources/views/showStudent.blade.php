@@ -274,6 +274,18 @@
                             </select>
                         </div>
 
+                        <div class="mb-3" id="menu_id">
+                            <label for="menu_id" class="form-label">Añadir otro menú especial:</label>
+                            <select class="form-select" name="menu_especial_2_id">
+                                <option selected="true" disabled="disabled">Seleccionar menú especial</option>
+                                @if(isset($specialMenu))
+                                    @foreach($specialMenu as $menu)
+                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
                         <div class="mb-3" id="telefono">
                             <label for="telefono" class="form-label">Teléfono:</label>
                             <input type="text" class="form-control" name="telefono">
@@ -320,6 +332,20 @@
                                         @foreach($specialMenu as $menu)
                                             <option
                                                 {{$family->menu_especial == $menu->id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="menu_id">
+                                <label for="menu_id" class="form-label">Añadir otro menú especial:</label>
+                                <select class="form-select" name="menu_especial_2_id">
+                                    <option selected="true" disabled="disabled">Seleccionar menú especial</option>
+                                    @if(isset($specialMenu))
+                                        @foreach($specialMenu as $menu)
+                                            <option
+                                                {{$family->menu_especial_2_id == $menu->id ? 'selected' : ''}} value="{{$menu->id}}">{{$menu->nombre}}
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -643,6 +669,10 @@
                     {
                         title: "MENU ESPECIAL",
                         data: 'menu_especial'
+                    },
+                    {
+                        title: "MENU ESPECIAL",
+                        data: 'menu_especial_2'
                     },
                     {
                         title: "TELÉFONO",

@@ -94,6 +94,9 @@ class Egresados extends Model
             case $numberOfStudents >= 151:
                 $descuento = $descuento->descuento_151_o_mas;
                 break;
+            default:
+                $descuento = 0;
+                break;
         }
 
         return $descuento;

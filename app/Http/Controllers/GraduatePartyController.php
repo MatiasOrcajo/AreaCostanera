@@ -97,6 +97,8 @@ class GraduatePartyController extends Controller
                     'personas' => count($query->people),
                     'menu_especial' => $query->menu_especial_id ? MenuEspecial::find($query->menu_especial_id)
                         ->nombre : '-',
+                    'menu_especial_2' => $query->menu_especial_2_id ? MenuEspecial::find($query->menu_especial_2_id)
+                        ->nombre : '-',
                     'fecha_pago' => \Illuminate\Support\Carbon::createFromFormat('Y-m-d', $query->fecha_pago)->format('d-m-Y'),
                     'forma_pago' => $query->paymentType->nombre,
                     'email' => $query->email,

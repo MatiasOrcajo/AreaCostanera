@@ -24,6 +24,7 @@ class StudentsController extends Controller
         $student->egresado_id = $request->event_id;
 //            $student->menu_id = $request->menu_id;
         $student->menu_especial_id = $request->menu_especial_id ?? null;
+        $student->menu_especial_2_id = $request->menu_especial_2_id ?? null;
         $student->fecha_pago = $request->fecha_pago;
         $student->forma_pago_id = $request->forma_pago_id;
         $student->medio_pago_id = $request->medio_pago_id;
@@ -47,6 +48,7 @@ class StudentsController extends Controller
         $family->nombre = $request->nombre;
         $family->estudiante_id = $request->estudiante_id;
         $family->menu_especial = $request->menu_especial_id ?? null;
+        $family->menu_especial_2_id = $request->menu_especial_2_id ?? null;
         $family->tipo = $request->tipo;
         $family->telefono = $request->telefono;
 
@@ -139,6 +141,7 @@ class StudentsController extends Controller
                 'id' => $query->id,
                 "nombre" => $query->nombre,
                 "menu_especial" => $query->menu_especial ? MenuEspecial::find($query->menu_especial)->nombre : '-',
+                "menu_especial_2" => $query->menu_especial_id_2 ? MenuEspecial::find($query->menu_especial_id_2)->nombre : '-',
                 "telefono" => $query->telefono
             ];
         });

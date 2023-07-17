@@ -94,11 +94,12 @@ Route::group(['middleware' => 'auth'], function(){
         /**
          * INFORMES
          */
-
-        Route::get('informes/eventos', [\App\Http\Controllers\ReportsController::class, 'indexEvents'])->name('reports.events');
-        Route::get('informes/eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'showEventReport'])->name('reports.events.show');
-        Route::get('informes/temporadas', [\App\Http\Controllers\ReportsController::class, 'indexSeasons'])->name('reports.seasons');
-        Route::get('buscar/fechas', [\App\Http\Controllers\ReportsController::class, 'searchByDates'])->name('search.dates');
+        Route::group(['middleware' => 'superadmin'], function(){
+            Route::get('informes/eventos', [\App\Http\Controllers\ReportsController::class, 'indexEvents'])->name('reports.events');
+            Route::get('informes/eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'showEventReport'])->name('reports.events.show');
+            Route::get('informes/temporadas', [\App\Http\Controllers\ReportsController::class, 'indexSeasons'])->name('reports.seasons');
+            Route::get('buscar/fechas', [\App\Http\Controllers\ReportsController::class, 'searchByDates'])->name('search.dates');
+        });
     });
 
 });
