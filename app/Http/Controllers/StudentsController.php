@@ -151,6 +151,7 @@ class StudentsController extends Controller
 
     public function edit(Estudiante $graduate, Request $request)
     {
+//        dd($graduate->cuotas);
         $graduate->cuotas->map(function ($query) {
             $query->delete();
         });

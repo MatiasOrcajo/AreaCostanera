@@ -364,7 +364,7 @@
                             </div>
 
                             <div class="mb-3" id="menu_id">
-                                <label for="menu_id" class="form-label">Menú especial:</label>
+                                <label for="menu_id" class="form-label">Otro menú especial:</label>
                                 <select class="form-select" name="menu_especial_2_id">
                                     <option selected="true" disabled="disabled">Seleccionar menú especial</option>
                                     @if(isset($specialMenu))
