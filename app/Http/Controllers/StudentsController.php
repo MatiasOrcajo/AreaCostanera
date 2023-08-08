@@ -33,6 +33,7 @@ class StudentsController extends Controller
         $student->menores_5 = $request->menores_5;**/
         $student->email = $request->email;
         $student->telefono = $request->telefono;
+        $student->observaciones = $request->observaciones;
         $student->save();
 
         self::createDues($request->forma_pago_id, $student);

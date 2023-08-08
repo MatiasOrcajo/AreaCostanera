@@ -21,6 +21,8 @@
         <br>
         <small>Descuento por día elegido: {{$student->resumen ? $student->resumen->descuento_dia_elegido : $student->event->day->descuento}}%</small>
         <br>
+        <small>Observaciones: {{ $student->observaciones}}</small>
+        <br>
     </div>
     <a href="{{route('show.graduate', $student->event->slug)}}" style="text-decoration: none">
         <button type="button" class="btn btn-primary">
@@ -671,7 +673,7 @@
                         data: 'menu_especial'
                     },
                     {
-                        title: "MENU ESPECIAL",
+                        title: "2DO MENU ESP.",
                         data: 'menu_especial_2'
                     },
                     {

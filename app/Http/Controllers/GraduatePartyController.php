@@ -103,6 +103,7 @@ class GraduatePartyController extends Controller
                     'forma_pago' => $query->paymentType->nombre,
                     'email' => $query->email,
                     'telefono' => $query->telefono,
+                    'observaciones' => $query->observaciones,
                     'total' => '$' . $query->getTotalPrice()
                 ];
             });
