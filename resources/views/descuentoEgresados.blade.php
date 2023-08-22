@@ -67,33 +67,34 @@
                             @method('PUT')
                             @csrf
                             <h4>Descuentos</h4>
+{{--                            22/08 CAMBIO LOS TEXTOS DE LOS DESCUENTOS POR PEDIDO DE SEBASTIAN, PERO NO CAMBIO LOS NAMES DE LOS INPUTS NI NADA MAS--}}
                             <div class="mb-3">
                                 <label for="20_a_30" class="form-label">20 a 30:</label>
                                 <input value="{{$descuento["descuento_20_a_30"]}}" type="number" class="form-control" id="20_a_30"
                                        name="20_a_30">
                             </div>
                             <div class="mb-3">
-                                <label for="31_a_50" class="form-label">31 a 50:</label>
+                                <label for="31_a_50" class="form-label">31 a 40:</label>
                                 <input value="{{$descuento["descuento_31_a_50"]}}" type="number" class="form-control" id="31_a_50"
                                        name="31_a_50">
                             </div>
                             <div class="mb-3">
-                                <label for="51_a_70" class="form-label">51 a 70:</label>
+                                <label for="51_a_70" class="form-label">41 a 60:</label>
                                 <input value="{{$descuento["descuento_51_a_70"]}}" type="number" class="form-control" id="51_a_70"
                                        name="51_a_70">
                             </div>
                             <div class="mb-3">
-                                <label for="71_a_100" class="form-label">71 a 100:</label>
+                                <label for="71_a_100" class="form-label">61 a 75:</label>
                                 <input value="{{$descuento["descuento_71_a_100"]}}" type="number" class="form-control" id="71_a_100"
                                        name="71_a_100">
                             </div>
                             <div class="mb-3">
-                                <label for="101_a_150" class="form-label">101 a 150:</label>
+                                <label for="101_a_150" class="form-label">76 a 100:</label>
                                 <input value="{{$descuento["descuento_101_a_150"]}}" type="number" class="form-control" id="101_a_150"
                                        name="101_a_150">
                             </div>
                             <div class="mb-3">
-                                <label for="151_o_mas" class="form-label">151 o mas:</label>
+                                <label for="151_o_mas" class="form-label">100 o mas:</label>
                                 <input value="{{$descuento["descuento_151_o_mas"]}}" type="number" class="form-control" id="151_o_mas"
                                        name="151_o_mas">
                             </div>
@@ -145,19 +146,19 @@
                     { title: "20 a 30",
                         data: '20_a_30'
                     },
-                    { title: "31 a 50",
+                    { title: "31 a 40",
                         data: '31_a_50'
                     },
-                    { title: "51 a 70",
+                    { title: "41 a 60",
                         data: '51_a_70'
                     },
-                    { title: "71 a 100",
+                    { title: "61 a 75",
                         data: '71_a_100'
                     },
-                    { title: "101 a 150",
+                    { title: "76 a 100",
                         data: '101_a_150'
                     },
-                    { title: "151 o mas",
+                    { title: "100 o mas",
                         data: '151_o_mas'
                     },
                     {

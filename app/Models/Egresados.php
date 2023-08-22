@@ -79,19 +79,19 @@ class Egresados extends Model
             case $numberOfStudents >= 20 && $numberOfStudents <= 30:
                 $descuento = $descuento->descuento_20_a_30;
                 break;
-            case $numberOfStudents >= 31 && $numberOfStudents <= 50:
+            case $numberOfStudents >= 31 && $numberOfStudents <= 40:
                 $descuento = $descuento->descuento_31_a_50;
                 break;
-            case $numberOfStudents >= 51 && $numberOfStudents <= 70:
+            case $numberOfStudents >= 41 && $numberOfStudents <= 60:
                 $descuento = $descuento->descuento_51_a_70;
                 break;
-            case $numberOfStudents >= 71 && $numberOfStudents <= 100:
+            case $numberOfStudents >= 61 && $numberOfStudents <= 75:
                 $descuento = $descuento->descuento_71_a_100;
                 break;
-            case $numberOfStudents >= 101 && $numberOfStudents <= 150:
+            case $numberOfStudents >= 76 && $numberOfStudents <= 100:
                 $descuento = $descuento->descuento_101_a_150;
                 break;
-            case $numberOfStudents >= 151:
+            case $numberOfStudents >= 100:
                 $descuento = $descuento->descuento_151_o_mas;
                 break;
             default:
