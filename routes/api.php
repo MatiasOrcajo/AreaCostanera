@@ -64,4 +64,6 @@ Route::get('informes-eventos/{event}', [\App\Http\Controllers\ReportsController:
 
 Route::get('informes-temporadas-list', [\App\Http\Controllers\ReportsController::class, 'listPaymentsByDates'])->name('list.payments');
 
+
+
 //listPaymentsByDates

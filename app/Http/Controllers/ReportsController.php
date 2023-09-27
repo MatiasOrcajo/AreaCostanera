@@ -19,6 +19,11 @@ class ReportsController extends Controller
         return view('reports.events');
     }
 
+    public function indexEventsForAdminOnly()
+    {
+        return view('reports.eventsForAdminOnly');
+    }
+
     public function indexSeasons()
     {
         return view('reports.seasons');
@@ -96,17 +101,46 @@ class ReportsController extends Controller
 
     public function listPaymentsByDates(Request $request)
     {
-        $data = Pago::whereBetween('created_at', [$request->first_date, $request->second_date])->get()->map(function ($query) {
+        $data = isset($request->first_date) ? Pago::whereBetween('created_at', [$request->first_date, $request->second_date])->get() : Pago::whereDate('created_at', $request->date)->get();
+
+        $data = $data->map(function ($query) {
             $student = Estudiante::find($query->estudiante_id);
             return [
                 "nombre" => $student->nombre,
-                "monto" => $query->amount,
+                "monto" => '$'.$query->amount,
                 "tipo" => strtoupper($query->tipo),
                 "medio" => strtoupper(MediosPago::find($student->medio_pago_id)->metodo),
                 "fecha" => Carbon::parse($query->created_at)->format('d-m-Y')
             ];
         });
 
+
         return DataTables::of($data)->make(true);
+    }
+
+    public function indexChargesPerDay()
+    {
+        return view('reports.day');
+    }
+
+    public function getChargesPerDay(Request $request)
+    {
+        $payments = Pago::whereDate('created_at', $request->date)->get();
+
+        $data = [
+            'electronicsPayments' => 0,
+            'cashPayments' => 0
+        ];
+
+        foreach ($payments as $payment) {
+            $student = Estudiante::find($payment->estudiante_id);
+            if ($student->medio_pago_id == 2) {
+                $data['cashPayments'] += $payment->amount;
+            } else {
+                $data['electronicsPayments'] += $payment->amount;
+            }
+        }
+
+        return json_encode($data);
     }
 }

@@ -215,9 +215,15 @@ class GraduatePartyController extends Controller
     {
         $debtors = $event->installmentsForThisEvent->where('status', 0)->where('fecha_estipulada', '<', Carbon::now());
         $data = $debtors->map(function($query){
+            $student = Estudiante::find($query->estudiante_id);
+            $first = round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount());
+            +
+            $second = round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount()) * \App\Models\InteresCuota::first()->interes/ 100;
+
            return[
                'nombre' => Estudiante::find($query->estudiante_id)->nombre,
-               'fecha_estipulada' => Carbon::parse($query->fecha_estipulada)->format('d-m-Y')
+               'fecha_estipulada' => Carbon::parse($query->fecha_estipulada)->format('d-m-Y'),
+               'monto' => $first == 0 ? '-' : '$'.$first . ' + interes de $'.$second
            ] ;
         });
 

@@ -10,6 +10,20 @@
 
 @section('content')
     <!-- Button trigger modal -->
+
+    <h5>
+        Cantidad de egresados: {{count($event->persons)}}
+    </h5>
+    <h5>
+        Cantidad de invitados: {{count($event->invited)}}
+    </h5>
+    <h5>
+        Cantidad de menues especiales: {{count($event->invited->whereNotNull('menu_especial'))}}
+    </h5>
+    <h5>
+        Cantidad de deudores: {{count($event->installmentsForThisEvent->where('status', 0)->where('fecha_estipulada', '<', Carbon\Carbon::now()))}}
+    </h5>
+
     <a href="{{route('show.graduate', $event->slug)}}">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
             Volver
@@ -326,6 +340,10 @@
                     {
                         title: "FECHA ESTIPULADA",
                         data: 'fecha_estipulada'
+                    },
+                    {
+                        title: "MONTO",
+                        data: 'monto'
                     },
                 ],
             })

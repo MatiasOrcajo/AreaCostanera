@@ -331,17 +331,30 @@ return [
         [
             'text'      => 'Informes',
             'icon'      => 'fas fa-fw fa-share',
-            'can'       => 'superadmin',
             'submenu'   => [
                 [
                     'text' => 'De Eventos',
                     'icon' => 'fa-solid fa-circle-info',
+                    'url'  => '/admin/informes/eventos/detalle',
+                    'can'       => 'admin',
+                ],
+                [
+                    'text' => 'Cobros por día',
+                    'icon' => 'fa-solid fa-circle-info',
+                    'url'  => '/admin/informes/cobros-por-dia',
+                    'can'       => ['admin', 'superadmin'],
+                ],
+                [
+                    'text' => 'De Eventos',
+                    'icon' => 'fa-solid fa-circle-info',
                     'url'  => '/admin/informes/eventos',
+                    'can'       => 'superadmin',
                 ],
                 [
                     'text' => 'De Temporadas',
                     'icon' => 'fa-solid fa-circle-info',
                     'url'  => '/admin/informes/temporadas',
+                    'can'       => 'superadmin',
                 ],
             ],
         ],
