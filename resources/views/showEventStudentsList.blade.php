@@ -345,6 +345,22 @@
                         title: "MONTO",
                         data: 'monto'
                     },
+                    {
+                        title: "OPCION",
+                        width: "5%",
+                        sortable: false,
+                        "render": function (data, type, full, meta) {
+                            let id = full.id;
+                            let nombre = full.nombre;
+                            let personas = full.personas;
+
+                            return `<a title="Ver estudiante" href="/admin/estudiante/${id}"
+                            style="cursor:
+                            pointer; text-decoration: none;
+                            "> <i
+                            class="fa-solid fa-eye"></i> </a>`
+                        }
+                    },
                 ],
             })
 

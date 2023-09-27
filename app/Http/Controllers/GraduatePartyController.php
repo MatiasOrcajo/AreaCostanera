@@ -221,6 +221,7 @@ class GraduatePartyController extends Controller
             $second = round(($student->getTotalPriceWithAdvancePayments() - $student->getDuesPayedAmount()) / $student->getRemainingDuesCount()) * \App\Models\InteresCuota::first()->interes/ 100;
 
            return[
+               'id' => Estudiante::find($query->estudiante_id)->id,
                'nombre' => Estudiante::find($query->estudiante_id)->nombre,
                'fecha_estipulada' => Carbon::parse($query->fecha_estipulada)->format('d-m-Y'),
                'monto' => $first == 0 ? '-' : '$'.$first . ' + interes de $'.$second
