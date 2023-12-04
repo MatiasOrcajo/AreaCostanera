@@ -38,6 +38,8 @@ class StudentsController extends Controller
 
         self::createDues($request->forma_pago_id, $student);
 
+        UserController::history('Creó el estudiante '.$student->nombre. ' del evento '.$student->event->school->nombre.' '.$student->event->curso.' '.$student->event->fecha);
+
         return back()->with('success', 'Egresado añadido');
 
     }
@@ -74,6 +76,8 @@ class StudentsController extends Controller
         }
 
         $family->save();
+
+        UserController::history('Creó el invitado '.$family->nombre.' del estudiante '.$student->nombre. ' del evento '.$student->event->school->nombre.' '.$student->event->curso.' '.$student->event->fecha);
 
         return back()->with('success', 'Familiar añadido');
     }
@@ -150,16 +154,46 @@ class StudentsController extends Controller
         return DataTables::of($data)->make(true);
     }
 
-    public function edit(Estudiante $graduate, Request $request)
+    public function edit(Estudiante $student, Request $request)
     {
-//        dd($graduate->cuotas);
-        $graduate->cuotas->map(function ($query) {
+
+
+        $beforeEditStudent =    'Estudiante: ' . $student->nombre .'<br>'.
+                                'ID evento = ' . $student->egresado_id. '<br>' .
+                                'ID menu especial: ' . $student->menu_especial_id. '<br>'.
+                                'ID menu especial 2: '. $student->menu_especial_2_id. '<br>'.
+                                'Fecha primer pago: '. $student->fecha_pago. '<br>'.
+                                'ID medio de pago: '. $student->menu_especial_2_id. '<br>'.
+                                'ID forma de pago: '. $student->forma_pago_id. '<br>'.
+                                'Email: '. $student->email. '<br>'.
+                                'Teléfono: '. $student->telefono. '<br>'.
+                                'Descuento especial: '. $student->descuento_especial. '<br>'.
+                                'Observaciones: '. $student->observaciones. '<br>';
+
+        $student->cuotas->map(function ($query) {
             $query->delete();
         });
 
-        self::createDues($request->forma_pago_id, $graduate);
-        $graduate->update($request->toArray());
-        $graduate->save();
+        self::createDues($request->forma_pago_id, $student);
+        $student->update($request->toArray());
+        $student->save();
+
+        UserController::history('Editó el descuento del evento '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha. '<br>' .
+            'Versión anterior: <br>'.$beforeEditStudent.'<br>'.
+            'Versión nueva: <br>'.
+
+            'Estudiante: ' . $student->nombre .'<br>'.
+            'ID evento = ' . $student->egresado_id. '<br>' .
+            'ID menu especial: ' . $student->menu_especial_id. '<br>'.
+            'ID menu especial 2: '. $student->menu_especial_2_id. '<br>'.
+            'Fecha primer pago: '. $student->fecha_pago. '<br>'.
+            'ID medio de pago: '. $student->menu_especial_2_id. '<br>'.
+            'ID forma de pago: '. $student->forma_pago_id. '<br>'.
+            'Email: '. $student->email. '<br>'.
+            'Teléfono: '. $student->telefono. '<br>'.
+            'Descuento especial: '. $student->descuento_especial. '<br>'.
+            'Observaciones: '. $student->observaciones. '<br>'
+        );
 
         return back()->with('success', 'Estudiante editado correctamente');
     }
@@ -167,6 +201,8 @@ class StudentsController extends Controller
     public function showStudent(Estudiante $student)
     {
         $specialMenu = MenuEspecial::all();
+
+        UserController::history('Ingresó a ver el estudiante ' .$student->nombre. ', del evento '.$student->event->school->nombre . ' ' . $student->event->curso . ' del día ' . $student->event->fecha);
 
         return view('showStudent', compact('student', 'specialMenu'));
     }
@@ -178,6 +214,9 @@ class StudentsController extends Controller
             $estudianteResumen->total -= $family->total;
             $estudianteResumen->save();
         }
+
+        UserController::history('Eliminó al invitado '.$family->nombre);
+
        $family->delete();
 
        return back();
@@ -185,6 +224,14 @@ class StudentsController extends Controller
 
     public function editFamily(Request $request, EstudianteFamiliares $family)
     {
+
+        $beforeEditFamily =     'Invitado: ' . $family->nombre .'<br>'.
+                                'ID estudiante = ' . $family->estudiante_id. '<br>' .
+                                'ID menu especial: ' . $family->menu_especial. '<br>'.
+                                'ID menu especial 2: '. $family->menu_especial_2. '<br>'.
+                                'Teléfono: '. $family->telefono. '<br>'.
+                                'Tipo: '. $family->tipo. '<br>';
+
         $family->nombre = $request->nombre;
 
         if ($request->menu_especial_id == "Seleccionar menú especial"){
@@ -198,12 +245,26 @@ class StudentsController extends Controller
 
         $family->save();
 
+        UserController::history('Editó el invitado del evento '. $family->estudiante->event->school->nombre . ' ' . $family->estudiante->event->curso . ' del día ' . $family->estudiante->event->fecha. '<br>' .
+            'Versión anterior: <br>'.$beforeEditFamily.'<br>'.
+            'Versión nueva: <br>'.
+
+            'Invitado: ' . $family->nombre .'<br>'.
+            'ID estudiante = ' . $family->estudiante_id. '<br>' .
+            'ID menu especial: ' . $family->menu_especial. '<br>'.
+            'ID menu especial 2: '. $family->menu_especial_2. '<br>'.
+            'Teléfono: '. $family->telefono. '<br>'.
+            'Tipo: '. $family->tipo. '<br>'
+        );
+
         return back();
     }
 
     public function deleteStudent(Estudiante $student)
     {
         $student->delete();
+
+        UserController::history('Eliminó el estudiante ' .$student->nombre. ', del evento '.$student->event->school->nombre . ' ' . $student->event->curso . ' del día ' . $student->event->fecha);
 
         return true;
     }
@@ -216,7 +277,7 @@ class StudentsController extends Controller
         $pago->tipo = 'adelanto';
         $pago->save();
 
-
+        UserController::history('Registró ADELANTO por $'.$pago->amount.' del estudiante ' .$student->nombre. ', del evento '.$student->event->school->nombre . ' ' . $student->event->curso . ' del día ' . $student->event->fecha);
 
         return back();
     }
@@ -224,6 +285,8 @@ class StudentsController extends Controller
     public function deleteAdvancedPayment(Pago $payment)
     {
         $payment->delete();
+
+        UserController::history('Eliminó un pago adelantado del estudiante ' . $payment->estudiante->nombre);
 
         return back();
     }

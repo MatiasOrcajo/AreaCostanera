@@ -34,14 +34,29 @@ class FormasPagoController extends Controller
     {
         $validated = $request->validated();
 
-        FormasPago::create($validated);
+        $formaPago = FormasPago::create($validated);
+
+        UserController::history('Creó la forma de pago '. $formaPago->nombre);
 
         return back()->with('success', 'Forma de Pago añadida');
     }
 
     public function edit(FormasPago $paymentType, Request $request)
     {
+
+        $beforeEditPaymentType = 'Versión anterior: <br>'.
+            'Nombre: '. $paymentType->nombre .
+            'Interés: '. $paymentType->interes;
+
         $paymentType->update($request->toArray());
+
+        UserController::history('Editó el método de pago ID '. $paymentType->id . ' <br>' . $beforeEditPaymentType. '<br>'.
+            'Versión nueva: <br>'.
+
+            'Nombre: '.$paymentType->nombre .'<br>'.
+            'Interés: '. $paymentType->interes
+
+        );
 
         return back()->with('success', 'Forma de pago editada');
     }

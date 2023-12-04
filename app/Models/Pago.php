@@ -10,4 +10,9 @@ class Pago extends Model
     protected $table = "estudiantes_pagos";
     protected $guarded;
     use HasFactory;
+
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
+    }
 }

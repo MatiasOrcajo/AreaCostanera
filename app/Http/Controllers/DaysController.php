@@ -37,14 +37,29 @@ class DaysController extends Controller
         $dia->nombre = $request->nombre;
         $dia->save();
 
+        UserController::history('Creó el día de descuento '. $dia->nombre);
+
         return back()->with('success', 'Grupo creado');
     }
 
     public function edit(Dia $day,Request $request)
     {
+
+        $beforeEditDay = 'Versión anterior: <br>'.
+            'Nombre: '. $day->nombre .
+            'Descuento: '. $day->descuento;
+
         $day->descuento = $request->descuento;
         $day->nombre = $request->nombre;
         $day->save();
+
+        UserController::history('Editó el día de descuento ID '. $day->id . ' <br>' . $beforeEditDay. '<br>'.
+            'Versión nueva: <br>'.
+
+            'Nombre: '.$day->nombre .'<br>'.
+            'Descuento: '. $day->descuento
+
+        );
 
         return back()->with('success', 'Día editado correctamente');
     }

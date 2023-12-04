@@ -53,7 +53,7 @@ class GraduatePartyController extends Controller
         $graduateDate = Carbon::createFromFormat('Y-m-d', $validated['fecha'])->format('d-m-Y');
 //        $paymentDate = Carbon::createFromFormat('Y-m-d', $validated['fecha_pago'])->format('d-m-Y');
 
-        Egresados::create([
+        $graduateParty = Egresados::create([
             'escuela_id' => $validated['escuela_id'],
             'curso' => $validated['curso'],
             'fecha' => $graduateDate,
@@ -65,6 +65,8 @@ class GraduatePartyController extends Controller
             'slug' => Str::slug($validated['escuela_id'] . '-' . $validated['curso'] . '-' . $graduateDate),
 //            'forma_pago_id' => $validated['forma_pago_id']
         ]);
+
+        UserController::history('Creó la fiesta de egresados '. $graduateParty->school->nombre . ' ' . $graduateParty->curso . ' del día ' . $graduateDate);
 
         return back()->with('success', 'Fiesta añadida');
     }
@@ -80,6 +82,8 @@ class GraduatePartyController extends Controller
         $mediosPago = MediosPago::all();
         $escuelas = Escuela::all();
         $dias = Dia::all();
+
+        UserController::history('Ingresó a ver '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha);
 
         return view('showEvent', compact('event', 'menus', 'formasPago', 'specialMenu', 'graduates', 'mediosPago', 'escuelas', 'dias'));
     }
@@ -113,6 +117,8 @@ class GraduatePartyController extends Controller
 
     public function deleteEvent(Egresados $event)
     {
+        UserController::history('Eliminó el evento '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha);
+
         $event->delete();
 
         return true;
@@ -120,7 +126,25 @@ class GraduatePartyController extends Controller
 
     public function edit(Request $request, Egresados $event)
     {
+        $beforeEditEvent = 'Escuela: '. $event->school->nombre. '<br>'.
+            'Menu: ' . $event->menu->nombre. '<br>'.
+            'Descuento día: ' . $event->day->nombre. '<br>'.
+            'Curso: ' . $event->curso. '<br>'.
+            'Cantidad de egresados: ' . $event->cantidad_egresados. '<br>'.
+            'Fecha: ' . $event->fecha. '<br>';
+
         $event->update($request->toArray());
+
+        UserController::history('Editó la fiesta de egresados '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha. '<br> Version previa: <br>' . $beforeEditEvent. '<br>' .
+            'Versión nueva: <br>' .
+            $event->school->nombre. '<br>'.
+            'Menu: ' . $event->menu->nombre. '<br>'.
+            'Descuento día: ' . $event->day->nombre. '<br>'.
+            'Curso: ' . $event->curso. '<br>'.
+            'Cantidad de egresados: ' . $event->cantidad_egresados. '<br>'.
+            'Fecha: ' . $event->fecha. '<br>'
+
+        );
 
         return back();
     }
@@ -151,14 +175,28 @@ class GraduatePartyController extends Controller
 
         $discount->save();
 
+        UserController::history('Creó el descuento ' . $discount->descuento);
+
         return back();
     }
 
     public function editDiscount(Request $request, Egresados $event)
     {
+        $beforeEditDiscount =    'Evento: ' . $event->school->nombre . ' ' . $event->curso . ' del día ' .                       $event->fecha.
+                                'ID descuento = ' . $event->id. '<br>' .
+                                'Descuento: ' . $event->discount->descuento. '<br>'
+                                ;
 
         $event->discount->descuento = $request->descuento;
         $event->discount->save();
+
+        UserController::history('Editó el descuento del evento '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha. '<br>' .
+            'Versión anterior: <br>'.$beforeEditDiscount.'<br>'.
+            'Versión nueva: <br>'.  'Evento: ' . $event->school->nombre . ' ' . $event->curso . ' del día ' .$event->fecha.
+                                    'ID descuento = ' . $event->id. '<br>' .
+                                    'Descuento: ' . $event->discount->descuento. '<br>'
+
+        );
 
         return back();
     }

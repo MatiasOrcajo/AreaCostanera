@@ -30,7 +30,9 @@ class SchoolsController extends Controller
     public function storeSchool(StoreSchoolRequest $req)
     {
         $validated = $req->validated();
-        Escuela::create($validated);
+        $school = Escuela::create($validated);
+
+        UserController::history('creó la escuela '. $school->nombre);
 
         return back()->with('success', 'Escuela creada');
     }
@@ -60,7 +62,14 @@ class SchoolsController extends Controller
 
     public function edit(Escuela $school, Request $request)
     {
+        $beforeEditSchool = 'Versión anterior: <br>'.
+                            'Nombre: '. $school->nombre;
+
         $school->update($request->toArray());
+
+        UserController::history('Editó la escuela ID '. $school->id . ' <br>' . $beforeEditSchool. '<br>'.
+            'Versión nueva: '. $school->nombre
+        );
 
         return back()->with('success', 'Escuela editada');
     }
