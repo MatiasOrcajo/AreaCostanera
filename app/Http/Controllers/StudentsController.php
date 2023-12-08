@@ -82,8 +82,16 @@ class StudentsController extends Controller
         return back()->with('success', 'Familiar añadido');
     }
 
+    /**
+     * forma de pago
+     * @param int $id
+     *
+     * @param Estudiante $student
+     * @return void
+     */
     private static function createDues(int $id, Estudiante $student)
     {
+
         $formaPago = FormasPago::find($id);
         switch ($formaPago->nombre){
             case '2 cuotas':
@@ -157,7 +165,6 @@ class StudentsController extends Controller
     public function edit(Estudiante $student, Request $request)
     {
 
-
         $beforeEditStudent =    'Estudiante: ' . $student->nombre .'<br>'.
                                 'ID evento = ' . $student->egresado_id. '<br>' .
                                 'ID menu especial: ' . $student->menu_especial_id. '<br>'.
@@ -178,7 +185,7 @@ class StudentsController extends Controller
         $student->update($request->toArray());
         $student->save();
 
-        UserController::history('Editó el descuento del evento '. $event->school->nombre . ' ' . $event->curso . ' del día ' . $event->fecha. '<br>' .
+        UserController::history('Editó al estudiante '. $student->nombre. '<br>' .
             'Versión anterior: <br>'.$beforeEditStudent.'<br>'.
             'Versión nueva: <br>'.
 
@@ -284,27 +291,29 @@ class StudentsController extends Controller
 
     public function deleteAdvancedPayment(Pago $payment)
     {
-        $payment->delete();
-
         UserController::history('Eliminó un pago adelantado del estudiante ' . $payment->estudiante->nombre);
+
+        $payment->delete();
 
         return back();
     }
 
-    public function closePrice(Estudiante $estudiante)
+    public function closePrice(Estudiante $student)
     {
         $resumen = new EstudiantesResumen();
-        $resumen->estudiante_id = $estudiante->id;
-        $resumen->precio_unitario = $estudiante->event->menu->precio;
-        $resumen->precio_unitario_descuentos = $estudiante->getPriceOfAdults() / (count($estudiante->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1);
-        $resumen->interes_cuotas = $estudiante->paymentType->interes;
-        $resumen->descuento_cantidad_egresados = $estudiante->event->getEventDiscountByAmountOfStudents();
-        $resumen->descuento_estudiante = $estudiante->descuento_especial;
-        $resumen->descuento_dia_elegido = $estudiante->event->day->descuento;
-        $resumen->iva = round(($estudiante->getPriceOfMinorsOfTwelve() + $estudiante->getPriceOfAdults()) * $estudiante->medioDePago->iva / 100);
-        $resumen->total = round($estudiante->getTotalPrice());
+        $resumen->estudiante_id = $student->id;
+        $resumen->precio_unitario = $student->event->menu->precio;
+        $resumen->precio_unitario_descuentos = $student->getPriceOfAdults() / (count($student->people->where('tipo', 'adulto')->where('fuera_termino', 0)) + 1);
+        $resumen->interes_cuotas = $student->paymentType->interes;
+        $resumen->descuento_cantidad_egresados = $student->event->getEventDiscountByAmountOfStudents();
+        $resumen->descuento_estudiante = $student->descuento_especial;
+        $resumen->descuento_dia_elegido = $student->event->day->descuento;
+        $resumen->iva = round(($student->getPriceOfMinorsOfTwelve() + $student->getPriceOfAdults()) * $student->medioDePago->iva / 100);
+        $resumen->total = round($student->getTotalPrice());
 
         $resumen->save();
+
+        UserController::history('Cerró el precio del estudiante '.$student->nombre. ' del evento '.$student->event->school->nombre.' '.$student->event->curso.' '.$student->event->fecha);
 
         return true;
     }
@@ -321,6 +330,8 @@ class StudentsController extends Controller
 
         $student->descuento_especial = $request->descuento;
         $student->save();
+
+        UserController::history('Creó un descuento del '. $student->descuento_especial.'% para el estudiante '.$student->nombre. ' del evento '.$student->event->school->nombre.' '.$student->event->curso.' '.$student->event->fecha);
 
         return back();
     }

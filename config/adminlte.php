@@ -356,6 +356,12 @@ return [
                     'url'  => '/admin/informes/temporadas',
                     'can'       => 'superadmin',
                 ],
+                [
+                    'text' => 'Historial',
+                    'icon' => 'fa-solid fa-circle-info',
+                    'url'  => '/admin/informes/historial',
+                    'can'       => 'superadmin',
+                ],
             ],
         ],
         [

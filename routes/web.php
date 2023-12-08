@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth'], function(){
 
         Route::put('edit/special-menu/{menu}', [\App\Http\Controllers\MenuController::class, 'editSpecialMenu'])->name('edit.specialMenu');
 
-        Route::put('edit/graduate/{graduate}', [\App\Http\Controllers\StudentsController::class, 'edit'])->name('edit.egresado');
+        Route::put('edit/graduate/{student}', [\App\Http\Controllers\StudentsController::class, 'edit'])->name('edit.egresado');
 
         Route::get('estudiante/{student}', [\App\Http\Controllers\StudentsController::class, 'showStudent'])->name
         ('show.student');
@@ -103,6 +103,9 @@ Route::group(['middleware' => 'auth'], function(){
             Route::get('informes/eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'showEventReport'])->name('reports.events.show');
             Route::get('informes/temporadas', [\App\Http\Controllers\ReportsController::class, 'indexSeasons'])->name('reports.seasons');
             Route::get('buscar/fechas', [\App\Http\Controllers\ReportsController::class, 'searchByDates'])->name('search.dates');
+            Route::get('informes/historial', [\App\Http\Controllers\ReportsController::class, 'showHistory'])->name('history');
+            Route::get('informes/historial', [\App\Http\Controllers\ReportsController::class, 'showHistory'])->name('history');
+
         });
     });
 

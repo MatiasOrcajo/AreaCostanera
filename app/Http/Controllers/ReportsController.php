@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Egresados;
 use App\Models\Escuela;
 use App\Models\Estudiante;
+use App\Models\History;
 use App\Models\MediosPago;
 use App\Models\Pago;
 use Carbon\Carbon;
@@ -96,6 +97,8 @@ class ReportsController extends Controller
             }
         }
 
+        UserController::history('Consultó los pagos electrónicos y en efectivo hechos entre '.$request->first_date.' y '.$request->second_date);
+
         return json_encode($data);
     }
 
@@ -113,6 +116,8 @@ class ReportsController extends Controller
                 "fecha" => Carbon::parse($query->created_at)->format('d-m-Y')
             ];
         });
+
+        UserController::history('Consultó todos los pagos hechos entre '.$request->first_date.' y '.$request->second_date);
 
 
         return DataTables::of($data)->make(true);
@@ -141,6 +146,27 @@ class ReportsController extends Controller
             }
         }
 
+        UserController::history('Consultó los pagos electrónicos y en efectivo hechos el día '.$request->date);
+
         return json_encode($data);
+    }
+
+    public function showHistory()
+    {
+        return view('reports.history');
+    }
+
+    public function listHistory()
+    {
+
+        $data = History::orderBy('created_at', 'DESC')->get()->map(function($query){
+            return [
+              "user" => $query->user,
+                "message" => $query->message,
+                "date" => Carbon::parse($query->created_at)->format('d-m-Y H:m')
+            ];
+        });
+
+        return DataTables::of($data)->make(true);
     }
 }
