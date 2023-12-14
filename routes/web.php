@@ -99,11 +99,68 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('informes/cobros-por-dia', [\App\Http\Controllers\ReportsController::class, 'indexChargesPerDay'])->name('reports.chargesPerDay');
         Route::get('informes-eventos/cobros-por-dia', [\App\Http\Controllers\ReportsController::class, 'getChargesPerDay'])->name('search.chargesPerDay');
 
+        Route::post('cerrar-precio/{student}', [\App\Http\Controllers\StudentsController::class, 'closePrice']);
+
+        Route::get('schools', [\App\Http\Controllers\SchoolsController::class, 'listSchools'])->name('list.schools');
+
+        Route::get('days', [\App\Http\Controllers\DaysController::class, 'listDays'])->name('list.days');
+
+        Route::get('get/menus', [\App\Http\Controllers\MenuController::class, 'listMenus'])->name('list.menus');
+
+        Route::get('get/formas-de-pago', [\App\Http\Controllers\FormasPagoController::class, 'listFormasPago'])->name('list.formasPago');
+
+        Route::get('menus-especiales', [\App\Http\Controllers\MenuController::class, 'listSpecialMenus'])->name('list.menusEspeciales');
+
+        Route::get('fiesta-egresados/{id}', [\App\Http\Controllers\GraduatePartyController::class,
+            'listGraduatePartyPeople'])->name('list.graduateParty');
+
+        Route::get('egresado/{id}', [\App\Http\Controllers\StudentsController::class, 'getStudentFamily'])->name('list.studentFamily');
+
+        Route::get('cuota/{cuota}', [\App\Http\Controllers\CuotasController::class, 'getDueStatus']);
+
+        Route::put('saldar-cuota/{cuota}', [\App\Http\Controllers\CuotasController::class, 'payDue']);
+
+        Route::get('interes', [\App\Http\Controllers\InteresCuotaController::class, 'listInteres'])->name('listInteres');
+
+        Route::get('eventos-terminados', [\App\Http\Controllers\GraduatePartyController::class, 'listFinishedEvents'])->name('list.finishedEvents');
+
+        Route::get('get/descuentos-egresados', [\App\Http\Controllers\DescuentosCantidadegresadosController::class, 'listDiscounts'])->name('list.discounts');
+
+        Route::post('deshacer-adelanto/{payment}', [\App\Http\Controllers\StudentsController::class, 'deleteAdvancedPayment']);
+
+        /**
+         * Listados de evento
+         */
+        Route::get('listar-egresados/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listStudentsTable'])->name('list.students.table');
+
+        Route::get('listar-invitados/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listGuestsTable'])->name('list.guests.table');
+
+        Route::get('listar-especiales/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listMenusTable'])->name('list.menus.table');
+
+        Route::get('listar-deudores/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'eventDebtors'])->name('list.debtors.table');
+
+        /**
+         * INFORMES
+         */
+
+        Route::get('informes-eventos', [\App\Http\Controllers\ReportsController::class, 'eventsList'])->name('list.events.for.report');
+
+        Route::get('informes-eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'listPaymentsForEvent'])->name('list.event.reports');
+
+        Route::get('informes-temporadas-list', [\App\Http\Controllers\ReportsController::class, 'listPaymentsByDates'])->name('list.payments');
+
+        Route::get('informes-historial', [\App\Http\Controllers\ReportsController::class, 'listHistory'])->name('list.history');
+
+
+
+//listPaymentsByDates
+
+
+
         Route::group(['middleware' => 'superadmin'], function(){
             Route::get('informes/eventos/{event}', [\App\Http\Controllers\ReportsController::class, 'showEventReport'])->name('reports.events.show');
             Route::get('informes/temporadas', [\App\Http\Controllers\ReportsController::class, 'indexSeasons'])->name('reports.seasons');
             Route::get('buscar/fechas', [\App\Http\Controllers\ReportsController::class, 'searchByDates'])->name('search.dates');
-            Route::get('informes/historial', [\App\Http\Controllers\ReportsController::class, 'showHistory'])->name('history');
             Route::get('informes/historial', [\App\Http\Controllers\ReportsController::class, 'showHistory'])->name('history');
 
         });

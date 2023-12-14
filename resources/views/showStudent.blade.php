@@ -400,7 +400,7 @@
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/api/cerrar-precio/${id}`,
+                            url: `/admin/cerrar-precio/${id}`,
                             type: "POST",
                             datatype: "json",
                             data: {
@@ -444,7 +444,7 @@
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/api/deshacer-adelanto/${id}`,
+                            url: `/admin/deshacer-adelanto/${id}`,
                             method: "POST",
                             datatype: "json",
                             data: {
@@ -475,7 +475,7 @@
 
         function pagarCuota(id) {
             $.ajax({
-                url: `/api/cuota/${id}`,
+                url: `/admin/cuota/${id}`,
                 type: "GET",
                 datatype: "json",
                 data: {
@@ -498,7 +498,7 @@
                                 /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
                                     $.ajax({
-                                        url: `/api/saldar-cuota/${id}`,
+                                        url: `/admin/saldar-cuota/${id}`,
                                         type: "PUT",
                                         datatype: "json",
                                         data: {
@@ -539,7 +539,7 @@
                                 /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
                                     $.ajax({
-                                        url: `/api/saldar-cuota/${id}`,
+                                        url: `/admin/saldar-cuota/${id}`,
                                         type: "PUT",
                                         datatype: "json",
                                         data: {
@@ -617,7 +617,7 @@
 
         let id = {{$student->id}}
         $(document).ready(function () {
-            let url = '/api/egresado/' + id
+            let url = '/admin/egresado/' + id
             let table = $('#events').DataTable();
             table.destroy();
             $('#events').empty();

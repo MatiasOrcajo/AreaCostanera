@@ -76,13 +76,15 @@ class MenuController extends Controller
     {
 
         $beforeEditMenu = 'Versión anterior: <br>'.
-            'Nombre: '. $menu->nombre;
+            'Nombre: '. $menu->nombre.
+            'Precio: '. $menu->precio;
 
         $menu->update($request->toArray());
 
         UserController::history('Editó el menú ID '. $menu->id . ' <br>' . $beforeEditMenu. '<br>'.
-            'Versión nueva: '. $menu->nombre
-        );
+            'Versión nueva: '. $menu->nombre.
+            'Precio: '. $menu->precio,
+    );
 
         return back()->with('success', 'Menú editado');
     }

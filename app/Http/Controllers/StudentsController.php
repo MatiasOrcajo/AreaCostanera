@@ -13,6 +13,7 @@ use App\Models\MenuEspecial;
 use App\Models\Pago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class StudentsController extends Controller

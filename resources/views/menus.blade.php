@@ -65,18 +65,44 @@
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre del menú:</label>
                                 <small>(Por ejemplo: "Clásico")</small>
-                                <input type="text" class="form-control" value="{{$menu->nombre}}" id="nombre" name="nombre">
+                                <input type="text" class="form-control" value="{{$menu->nombre}}" id="nombre"
+                                       name="nombre">
                             </div>
                             <div class="mb-3">
                                 <label for="precio" class="form-label">Precio:</label>
                                 <small></small>
-                                <input value="{{$menu->precio}}" type="number" class="form-control" id="precio" name="precio">
+                                <input value="{{$menu->precio}}" type="number" class="form-control" id="precio"
+                                       name="precio">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                             </div>
                         </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Modal HISTORIAL -->
+        <div class="modal modal-center fade" id="showHistory{{$menu->id}}" tabindex="-1"
+             aria-labelledby="showHistory{{$menu->id}}Label"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table id="history{{$menu->id}}" class="display nowrap mt-5" style="width:100%">
+                            <thead>
+                            <th></th>
+                            <th></th>
+                            </thead>
+                        </table>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
                     </div>
 
                 </div>
@@ -101,12 +127,15 @@
 
     <script>
 
-        function openEditModal(id)
-        {
-            $("#editMenu"+id).modal('show');
+        function openEditModal(id) {
+            $("#editMenu" + id).modal('show');
         }
 
-        $(document).ready(function(){
+        function openHistoryModal(id) {
+            $("#showHistory" + id).modal('show');
+        }
+
+        $(document).ready(function () {
             let url = '{{route('list.menus')}}'
             let table = $('#menus').DataTable();
             table.destroy();
@@ -125,20 +154,22 @@
                     "targets": "_all"
                 }],
                 "columns": [
-                    { title: "MENU",
+                    {
+                        title: "MENU",
                         data: 'nombre'
                     },
-                    { title: "PRECIO",
+                    {
+                        title: "PRECIO",
                         data: 'precio'
                     },
                     {
                         title: "OPCION",
                         width: "10%",
                         sortable: false,
-                        "render": function ( data, type, full, meta ) {
+                        "render": function (data, type, full, meta) {
                             let id = full.id;
                             console.log(full);
-                            return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-pen-to-square"></i> </a>`;
+                            return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-pen-to-square"></i> </a>` + `<i title="Historial" onclick="openHistoryModal(${id})" style="cursor: pointer" class="fa fa-history" aria-hidden="true"></i>`;
                         }
                     },
                 ]
