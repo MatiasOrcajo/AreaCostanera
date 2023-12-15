@@ -9,4 +9,9 @@ class Menu extends Model
 {
     use HasFactory;
     protected $guarded;
+
+    public function historyRecords()
+    {
+        return $this->hasMany(HistoryRecord::class, 'specific_id')->where('application', Constants::MENU);
+    }
 }

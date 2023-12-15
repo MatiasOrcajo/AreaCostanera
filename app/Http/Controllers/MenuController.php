@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMenuRequest;
+use App\Models\Constants;
+use App\Models\HistoryRecord;
 use App\Models\Menu;
 use App\Models\MenuEspecial;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -24,7 +27,7 @@ class MenuController extends Controller
         $data = Menu::all()->map(function ($query) {
             return [
                 "nombre" => $query->nombre,
-                "precio" => $query->precio,
+                "precio" => "$".$query->precio,
                 "id" => $query->id
             ];
         });
@@ -74,10 +77,16 @@ class MenuController extends Controller
 
     public function edit(Menu $menu, Request $request)
     {
-
         $beforeEditMenu = 'Versión anterior: <br>'.
             'Nombre: '. $menu->nombre.
             'Precio: '. $menu->precio;
+
+        $historyRecord = new HistoryRecord();
+        $historyRecord->application = Constants::MENU;
+        $historyRecord->specific_id = $menu->id;
+        $historyRecord->message     = $menu->precio;
+        $historyRecord->message2    = $request->precio;
+        $historyRecord->save();
 
         $menu->update($request->toArray());
 
@@ -102,5 +111,19 @@ class MenuController extends Controller
         );
 
         return back()->with('success', 'Menú editado correctamente');
+    }
+
+    public function historyRecords(Menu $menu)
+    {
+
+        $data = $menu->historyRecords->map(function ($query){
+            return [
+                "fecha" => Carbon::parse($query->created_at)->format('d-m-Y'),
+                "precio_anterior" => '$'.$query->message,
+                "precio_nuevo" => '$'.$query->message2,
+            ];
+        });
+
+        return DataTables::of($data)->make(true);
     }
 }

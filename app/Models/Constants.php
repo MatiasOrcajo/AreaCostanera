@@ -11,4 +11,10 @@ class Constants extends Model
 
     const GRADUATE_PARTY_STATUS_ACTIVE = 1;
     const GRADUATE_PARTY_STATUS_UNACTIVE = 2;
+
+    /**
+     * APPLICATIONS
+     */
+
+    const MENU = 1;
 }

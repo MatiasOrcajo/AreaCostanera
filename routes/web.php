@@ -107,6 +107,8 @@ Route::group(['middleware' => 'auth'], function(){
 
         Route::get('get/menus', [\App\Http\Controllers\MenuController::class, 'listMenus'])->name('list.menus');
 
+        Route::get('get/history-records/menu/{menu}', [\App\Http\Controllers\MenuController::class, 'historyRecords'])->name('list.menu.historyRecords');
+
         Route::get('get/formas-de-pago', [\App\Http\Controllers\FormasPagoController::class, 'listFormasPago'])->name('list.formasPago');
 
         Route::get('menus-especiales', [\App\Http\Controllers\MenuController::class, 'listSpecialMenus'])->name('list.menusEspeciales');

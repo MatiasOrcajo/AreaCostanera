@@ -93,9 +93,9 @@
              aria-labelledby="showHistory{{$menu->id}}Label"
              aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" style="width: 150%">
                     <div class="modal-body">
-                        <table id="history{{$menu->id}}" class="display nowrap mt-5" style="width:100%">
+                        <table id="menuHistory{{$menu->id}}" class="display nowrap mt-5" style="width:100%">
                             <thead>
                             <th></th>
                             <th></th>
@@ -133,6 +133,40 @@
 
         function openHistoryModal(id) {
             $("#showHistory" + id).modal('show');
+
+            let url = 'get/history-records/menu/' + id
+            let table = $(`#menuHistory${id}`).DataTable();
+            table.destroy();
+            $(`#menuHistory${id}`).empty();
+
+
+            $(`#menuHistory${id}`).DataTable({
+                deferRender: true,
+                "autoWidth": true,
+                "paging": true,
+                stateSave: true,
+                "processing": true,
+                "ajax": url,
+                columnDefs: [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                }],
+                "columns": [
+                    {
+                        title: "FECHA DE CAMBIO",
+                        data: 'fecha'
+                    },
+                    {
+                        title: "PRECIO ANTERIOR",
+                        data: 'precio_anterior'
+                    },
+                    {
+                        title: "PRECIO NUEVO",
+                        data: 'precio_nuevo'
+                    },
+                ]
+            })
+
         }
 
         $(document).ready(function () {
@@ -168,13 +202,15 @@
                         sortable: false,
                         "render": function (data, type, full, meta) {
                             let id = full.id;
-                            console.log(full);
                             return `<a title="Editar menú" onclick="openEditModal(${id})" style="cursor: pointer"> <i class="fa-solid fa-pen-to-square"></i> </a>` + `<i title="Historial" onclick="openHistoryModal(${id})" style="cursor: pointer" class="fa fa-history" aria-hidden="true"></i>`;
                         }
                     },
                 ]
             })
         })
+
+
+        //list.menu.historyRecords
 
 
     </script>
