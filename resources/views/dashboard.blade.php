@@ -8,12 +8,28 @@
 @stop
 
 @section('content')
+
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
-        Crear nuevo evento
+        Nuevo evento egresados
     </button>
 
-    <!-- Modal -->
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSocialEvent">
+        Nuevo evento social
+    </button>
+
+    <!-- Modal egresados -->
     <div class="modal modal-center fade" id="createGraduateParty" tabindex="-1"
          aria-labelledby="createGraduatePartyLabel"
          aria-hidden="true">
@@ -86,6 +102,52 @@
                         {{--                            <label for="fecha_pago" class="form-label">Fecha de pago</label>--}}
                         {{--                            <input name="fecha_pago" type="date" class="form-control" id="fecha_pago">--}}
                         {{--                        </div>--}}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal evento social-->
+    <div class="modal modal-center fade" id="createSocialEvent" tabindex="-1"
+         aria-labelledby="createSocialEventLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createSocialEventLabel">Creación de evento social</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create_graduate_party" action="{{route('store.social.event')}}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre de evento</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Fecha del evento</label>
+                            <input name="date" type="date" class="form-control" id="date">
+                        </div>
+                        <div class="mb-3">
+                            <label for="diners" class="form-label">Cantidad de comensales</label>
+                            <input name="diners" type="text" class="form-control" id="diners">
+                        </div>
+                        <div class="mb-3">
+                            <label for="menu_id" class="form-label">Menú elegido:</label>
+                            <select id="menu_id" class="form-select" name="menu_id">
+                                <option selected="true" disabled="disabled">Seleccionar menú elegido</option>
+                                @if(isset($menusSociales))
+                                    @foreach($menusSociales as $menu)
+                                        <option value="{{$menu->id}}">{{$menu->nombre}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>

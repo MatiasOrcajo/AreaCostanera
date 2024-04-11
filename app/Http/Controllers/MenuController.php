@@ -126,4 +126,16 @@ class MenuController extends Controller
 
         return DataTables::of($data)->make(true);
     }
+
+    public function setMenuStatus(Menu $menu, Request $request)
+    {
+        $menu->status = $request->status;
+        $menu->save();
+
+        UserController::history('Marcó el menú '. $menu->nombre. 'como '. Constants::MENU_STATUS[$request->status]);
+
+        return redirect()->back();
+    }
+
+
 }

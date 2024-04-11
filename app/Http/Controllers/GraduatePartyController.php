@@ -21,6 +21,11 @@ use Yajra\DataTables\DataTables;
 class GraduatePartyController extends Controller
 {
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     *
+     * retorna datos que sirven para crear evento de egresados y eventos sociales
+     */
     public function index()
     {
         $graduateParties = Egresados::orderBy('fecha_carbon')
@@ -33,11 +38,20 @@ class GraduatePartyController extends Controller
 
         $escuelas = Escuela::all();
         $dias = Dia::all();
-        $menus = Menu::all();
+        $menus = Menu::all()->filter(function ($menu){
+            $name = explode(' ', $menu->nombre);
+            if(in_array('EGRESADOS', $name)) return $menu;
+        });
+
+        $menusSociales = Menu::all()->filter(function ($menu){
+            $name = explode(' ', $menu->nombre);
+            if(in_array('SOCIAL', $name)) return $menu;
+        });
+
         $formasPago = FormasPago::all();
 
 
-        return view('dashboard', compact('graduateParties', 'escuelas', 'dias', 'menus', 'formasPago'));
+        return view('dashboard', compact('graduateParties', 'escuelas', 'dias', 'menus', 'formasPago', 'menusSociales'));
     }
 
 

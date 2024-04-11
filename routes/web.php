@@ -109,6 +109,8 @@ Route::group(['middleware' => 'auth'], function(){
 
         Route::get('get/history-records/menu/{menu}', [\App\Http\Controllers\MenuController::class, 'historyRecords'])->name('list.menu.historyRecords');
 
+        Route::put('set/menu-status/{menu}', [\App\Http\Controllers\MenuController::class, 'setMenuStatus'])->name('set.menu-status');
+
         Route::get('get/formas-de-pago', [\App\Http\Controllers\FormasPagoController::class, 'listFormasPago'])->name('list.formasPago');
 
         Route::get('menus-especiales', [\App\Http\Controllers\MenuController::class, 'listSpecialMenus'])->name('list.menusEspeciales');
@@ -140,6 +142,11 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('listar-especiales/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'listMenusTable'])->name('list.menus.table');
 
         Route::get('listar-deudores/{event}', [\App\Http\Controllers\GraduatePartyController::class, 'eventDebtors'])->name('list.debtors.table');
+
+        /**
+         * Eventos sociales
+         */
+        Route::post('store-social-event', [\App\Http\Controllers\SocialEventController::class, 'store'])->name('store.social.event');
 
         /**
          * INFORMES

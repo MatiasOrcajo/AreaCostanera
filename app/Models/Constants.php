@@ -17,4 +17,17 @@ class Constants extends Model
      */
 
     const MENU = 1;
+
+
+    /**
+     * MENU STATUS
+     */
+
+    const ACTIVE    = 1;
+    const INACTIVE  = 0;
+
+    const MENU_STATUS = [
+        self::ACTIVE    => 'ACTIVO',
+        self::INACTIVE  => 'INACTIVO'
+    ];
 }
