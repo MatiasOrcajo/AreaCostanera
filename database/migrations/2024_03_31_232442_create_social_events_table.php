@@ -16,8 +16,9 @@ class CreateSocialEventsTable extends Migration
         Schema::create('social_events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('date');
+            $table->date('fecha');
             $table->unsignedInteger('diners');
+            $table->text('slug');
             $table->foreignIdFor(\App\Models\Menu::class, 'menu_id');
             $table->timestamps();
         });

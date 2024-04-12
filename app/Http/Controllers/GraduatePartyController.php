@@ -13,6 +13,7 @@ use App\Models\FormasPago;
 use App\Models\MediosPago;
 use App\Models\Menu;
 use App\Models\MenuEspecial;
+use App\Models\SocialEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -36,8 +37,17 @@ class GraduatePartyController extends Controller
                     return $query;
             });
 
+        $socialEvents = SocialEvent::orderBy('fecha')
+            ->get()
+            ->map(function ($query) {
+                $date = Carbon::parse($query->fecha);
+                if ($date->add(24, 'hours') >= Carbon::now()->add(-3, 'hours'))
+                    return $query;
+            });
+
         $escuelas = Escuela::all();
         $dias = Dia::all();
+
         $menus = Menu::all()->filter(function ($menu){
             $name = explode(' ', $menu->nombre);
             if(in_array('EGRESADOS', $name)) return $menu;
@@ -51,7 +61,7 @@ class GraduatePartyController extends Controller
         $formasPago = FormasPago::all();
 
 
-        return view('dashboard', compact('graduateParties', 'escuelas', 'dias', 'menus', 'formasPago', 'menusSociales'));
+        return view('dashboard', compact('graduateParties', 'socialEvents', 'escuelas', 'dias', 'menus', 'formasPago', 'menusSociales'));
     }
 
 

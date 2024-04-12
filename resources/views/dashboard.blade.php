@@ -159,12 +159,39 @@
     </div>
 
     <div class="my-3 mt-5">
+
+        @if(isset($socialEvents))
+            <div class="d-flex flex-wrap align-items-center">
+                @foreach($socialEvents as $event)
+                    @if($event)
+                        <div class=" col-5 rounded m-3 w-3 h-3 p-2"
+                             style="{{$event->getCssForPartyBox()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
+                            <a href="{{route('show.graduate', $event->slug)}}">
+                                <div class="col-10">
+                                    <h3>
+                                        Social: {{$event->name}}
+                                    </h3>
+                                    <span>
+                                        Fecha: {{$event->fecha}}
+                                    <br>
+                                        Personas: {{$event->diners}}
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    @endif
+
+                @endforeach
+            </div>
+        @endif
+
+
         @if(isset($graduateParties))
             <div class="d-flex flex-wrap align-items-center">
                 @foreach($graduateParties as $event)
                     @if($event)
                         <div class=" col-5 rounded m-3 w-3 h-3 p-2"
-                             style="{{$event->getDateStatusCss()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
+                             style="{{$event->getCssForPartyBox()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
                             <a href="{{route('show.graduate', $event->slug)}}">
                                 <div class="col-10">
                                     <h3>
