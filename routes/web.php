@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::prefix('admin')->group(function(){
         Route::get('dashboard', [GraduatePartyController::class, 'index'])->name('dashboard');
         Route::get('evento/{slug}', [GraduatePartyController::class, 'showGraduateParty'])->name('show.graduate');
+        Route::get('evento/social/{slug}', [\App\Http\Controllers\SocialEventController::class, 'show'])->name('show.social.event');
 
         Route::get('escuelas', [\App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
         Route::post('store/school', [\App\Http\Controllers\SchoolsController::class, 'storeSchool'])->name('store.school');

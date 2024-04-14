@@ -25,4 +25,10 @@ class SocialEventController extends Controller
         return redirect()->back();
     }
 
+    public function show($slug)
+    {
+        $socialEvent = SocialEvent::where('slug', $slug)->first();
+        dd($socialEvent);
+    }
+
 }
