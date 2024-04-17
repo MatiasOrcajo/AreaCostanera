@@ -18,7 +18,8 @@ class CreateSocialEventsTable extends Migration
             $table->string('name');
             $table->date('fecha');
             $table->unsignedInteger('diners');
-            $table->text('slug');
+            $table->unsignedFloat('discount')->nullable()->default(0.0);
+            $table->unsignedBigInteger('total');
             $table->foreignIdFor(\App\Models\Menu::class, 'menu_id');
             $table->timestamps();
         });

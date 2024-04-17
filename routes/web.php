@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::prefix('admin')->group(function(){
         Route::get('dashboard', [GraduatePartyController::class, 'index'])->name('dashboard');
         Route::get('evento/{slug}', [GraduatePartyController::class, 'showGraduateParty'])->name('show.graduate');
-        Route::get('evento/social/{slug}', [\App\Http\Controllers\SocialEventController::class, 'show'])->name('show.social.event');
+
 
         Route::get('escuelas', [\App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
         Route::post('store/school', [\App\Http\Controllers\SchoolsController::class, 'storeSchool'])->name('store.school');
@@ -161,9 +161,14 @@ Route::group(['middleware' => 'auth'], function(){
 
         Route::get('informes-historial', [\App\Http\Controllers\ReportsController::class, 'listHistory'])->name('list.history');
 
+        /**
+         * Eventos sociales
+         */
+        Route::get('evento/social/{event}', [\App\Http\Controllers\SocialEventController::class, 'show'])->name('show.social.event');
+        Route::post('add-discount/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerDiscount'])->name('social.event.add.discount');
+        Route::put('edit-discount/{event}', [\App\Http\Controllers\SocialEventController::class, 'editDiscount'])->name('social.event.edit.discount');
+        Route::post('register-payment/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerPayment'])->name('social.event.register.payment');
 
-
-//listPaymentsByDates
 
 
 

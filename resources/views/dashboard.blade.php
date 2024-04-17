@@ -19,6 +19,12 @@
         </div>
     @endif
 
+    @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session()->get('success') }}
+        </div>
+    @endif
+
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGraduateParty">
         Nuevo evento egresados
@@ -166,7 +172,7 @@
                     @if($event)
                         <div class=" col-5 rounded m-3 w-3 h-3 p-2"
                              style="{{$event->getCssForPartyBox()}}; box-shadow: 10px 9px 6px 2px rgba(0,0,0,0.1);">
-                            <a href="{{route('show.social.event', $event->slug)}}">
+                            <a href="{{route('show.social.event', $event->id)}}">
                                 <div class="col-10">
                                     <h3>
                                         Social: {{$event->name}}
