@@ -8,6 +8,15 @@
 @stop
 
 @section('content')
+    <small>
+        Los menús que contengan la palabra "SOCIAL" aparecerán listados en la creación de evento social
+    </small>
+    <br>
+    <small>
+        Los menús que contengan la palabra "EGRESADOS" aparecerán listados en la creación de evento egresados
+    </small>
+    <br>
+    <br>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDayGroup">
         Crear nuevo menú

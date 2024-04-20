@@ -37,6 +37,8 @@ class SocialEventController extends Controller
 
         $event->discount += $request->discount;
         $event->save();
+        $event->updateTotalForDiscount();
+
 
         return back()->with('Success', 'Descuento agregado');
     }
@@ -45,16 +47,28 @@ class SocialEventController extends Controller
     {
         $event->discount = $request->discount;
         $event->save();
+        $event->updateTotalForDiscount();
 
         return back()->with('Success', 'Descuento editado');
 
     }
 
+
+    /**
+     * @param Request $request
+     * @param SocialEvent $event
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function registerPayment(Request $request, SocialEvent $event)
     {
         $payment = new EventPayment();
         $payment->social_event_id = $event->id;
         $payment->payment = $request->payment;
+        $payment->diners_quantity = $request->diners_quantity;
+        $payment->save();
+
+        //Update total
+        $event->updateTotalForPayment($payment->diners_quantity);
 
         return back()->with('Success', 'Pago registrado');
 

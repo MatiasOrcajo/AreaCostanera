@@ -16,6 +16,7 @@ class CreateEventsPaymentsTable extends Migration
         Schema::create('events_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\SocialEvent::class, 'social_event_id');
+            $table->unsignedBigInteger('diners_quantity');
             $table->unsignedFloat('payment');
             $table->timestamps();
         });
