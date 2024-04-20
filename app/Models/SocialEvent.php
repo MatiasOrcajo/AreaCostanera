@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\PartyTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,16 @@ class SocialEvent extends Model
     public function payments()
     {
         return $this->hasMany(EventPayment::class, 'social_event_id');
+    }
+
+
+    /**
+     * Get amount of money of payed dishes
+     * @return float|int
+     */
+    public function getAmountOfPayments()
+    {
+        return array_sum($this->payments->pluck('payment')->toArray());
     }
 
     /**
@@ -53,7 +64,7 @@ class SocialEvent extends Model
      */
     public function updateTotalForNewDishPrice(): void
     {
-        $payedDishes = array_sum($this->payments->pluck('diners_quantity')->toArray());
+        $payedDishes = $this->getAmountOfPayments();
         $this->total = $this->total + (($this->diners - $payedDishes) * $this->menu->precio);
         $this->save();
     }
@@ -75,5 +86,15 @@ class SocialEvent extends Model
     public function menu()
     {
         return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function getFormatedDate()
+    {
+        return Carbon::parse($this->fecha)->format('d-m-Y');
+    }
+
+    public function getCountOfPayedDishes()
+    {
+        return array_sum($this->payments->pluck('diners_quantity')->toArray());
     }
 }

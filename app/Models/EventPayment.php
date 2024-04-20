@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventPayment extends Model
 {
+    protected $table = 'events_payments';
     use HasFactory;
 }

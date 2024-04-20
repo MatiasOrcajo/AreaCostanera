@@ -43,11 +43,22 @@
     <button id="eliminarEvento" type="button" class="btn btn-danger">
         Eliminar
     </button>
-    <h5 class="d-block mt-3">Lista de egresados:</h5>
+    <h2 class="d-block mt-3">Información del evento:</h2>
+    <br>
     @if(isset($event->discount))
-        <small onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un
-            descuento especial de {{$event->discount}}%</small>
+        <h4 onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un
+            descuento especial de {{$event->discount}}%</h4>
     @endif
+
+{{--    Informacion del evento--}}
+    <h4>Fecha del evento: {{$event->getFormatedDate()}}</h4>
+    <h4>Menú: {{$event->menu->nombre}}</h4>
+    <h4>Cantidad de comensales: {{$event->diners}}</h4>
+    <h4>Platos pagos: {{$event->getCountOfPayedDishes()}}</h4>
+    <h4>Platos por pagar: {{$event->diners - $event->getCountOfPayedDishes()}}</h4>
+    <h4>Total pago: ${{$event->getAmountOfPayments()}}</h4>
+    <h4>Total pendiente: ${{$event->total}}</h4>
+
 
     <!-- Modal -->
     <div class="modal modal-center fade" id="editDiscount" tabindex="-1"
@@ -94,10 +105,17 @@
                     <form id="create_graduate_party" action="{{route('social.event.register.payment', $event->id)}}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="payment" class="form-label">Monto:</label>
+                            <label for="diners_quantity" class="form-label">Cantidad de platos a pagar:</label>
+                            <br>
+                            <small>Precio unitario por plato: <strong>${{$event->menu->precio}}</strong></small>
                             <input type="number" class="form-control"
-                                   id="payment" name="payment">
+                                   id="diners_quantity" name="diners_quantity">
                         </div>
+{{--                        <div class="mb-3">--}}
+{{--                            <label for="payment" class="form-label">Monto:</label>--}}
+{{--                            <input type="number" class="form-control"--}}
+{{--                                   id="payment" name="payment">--}}
+{{--                        </div>--}}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>

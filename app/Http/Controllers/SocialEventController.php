@@ -63,7 +63,7 @@ class SocialEventController extends Controller
     {
         $payment = new EventPayment();
         $payment->social_event_id = $event->id;
-        $payment->payment = $request->payment;
+        $payment->payment = $event->menu->precio * $request->diners_quantity;
         $payment->diners_quantity = $request->diners_quantity;
         $payment->save();
 
