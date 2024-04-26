@@ -37,7 +37,8 @@ class GraduatePartyController extends Controller
                     return $query;
             });
 
-        $socialEvents = SocialEvent::orderBy('fecha')
+        $socialEvents = SocialEvent::where('status', 1)
+            ->orderBy('fecha')
             ->get()
             ->map(function ($query) {
                 $date = Carbon::parse($query->fecha);
@@ -48,15 +49,8 @@ class GraduatePartyController extends Controller
         $escuelas = Escuela::all();
         $dias = Dia::all();
 
-        $menus = Menu::all()->filter(function ($menu){
-            $name = explode(' ', $menu->nombre);
-            if(in_array('EGRESADOS', $name)) return $menu;
-        });
-
-        $menusSociales = Menu::all()->filter(function ($menu){
-            $name = explode(' ', $menu->nombre);
-            if(in_array('SOCIAL', $name)) return $menu;
-        });
+        $menus = Menu::getListOfSpecificMenuCategory("EGRESADOS");
+        $menusSociales = Menu::getListOfSpecificMenuCategory("SOCIAL");
 
         $formasPago = FormasPago::all();
 
@@ -100,7 +94,7 @@ class GraduatePartyController extends Controller
     {
         $event = Egresados::where('slug', $slug)->first();
         $graduates = $event->persons;
-        $menus = Menu::all();
+        $menus = Menu::getListOfSpecificMenuCategory("EGRESADOS");
         $formasPago = FormasPago::all();
         $specialMenu = MenuEspecial::all();
         $mediosPago = MediosPago::all();

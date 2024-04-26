@@ -108,8 +108,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="fecha" class="form-label">Fecha del evento</label>
-                            <input name="fecha" type="date" class="form-control" id="fecha">
-                            <small style="color: red">Volver a elegir la fecha</small>
+                            <input name="fecha" value="{{\Carbon\Carbon::parse($event->fecha)->format('Y-m-d')}}" type="date" class="form-control" id="fecha">
                         </div>
                         <div class="mb-3">
                             <label for="dia_id" class="form-label">Grupo de días:</label>

@@ -59,13 +59,23 @@ class SocialEvent extends Model
     }
 
     /**
+     * @param $oldDinersValue
+     * @return void
+     */
+    public function updateTotalWhenEventIsEdited($oldDinersValue)
+    {
+        $diferencia = $this->diners - $oldDinersValue;
+        $this->total = $this->total + $diferencia;
+        $this->save();
+    }
+
+    /**
      * Updates total when dish price is updated
      * @return void
      */
     public function updateTotalForNewDishPrice(): void
     {
-        $payedDishes = $this->getAmountOfPayments();
-        $this->total = $this->total + (($this->diners - $payedDishes) * $this->menu->precio);
+        $this->total = $this->total + (($this->diners - $this->getCountOfPayedDishes()) * $this->menu->precio);
         $this->save();
     }
 

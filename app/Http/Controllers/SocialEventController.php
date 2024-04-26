@@ -29,7 +29,21 @@ class SocialEventController extends Controller
 
     public function show(SocialEvent $event)
     {
-        return view('showSocialEvent', compact('event'));
+        $menus = Menu::getListOfSpecificMenuCategory("SOCIAL");
+
+        return view('showSocialEvent', compact('event', 'menus'));
+    }
+
+    public function edit(Request $request, SocialEvent $event)
+    {
+        $oldDinersValue = $event->diners;
+        $event->name = $request->name;
+        $event->fecha = $request->fecha;
+        $event->diners = $request->diners;
+        $event->menu_id = $request->menu_id;
+        $event->updateTotalWhenEventIsEdited($oldDinersValue);
+
+        return back()->with('Success', 'Evento editado');
     }
 
     public function registerDiscount(Request $request, SocialEvent $event)
@@ -53,6 +67,30 @@ class SocialEventController extends Controller
 
     }
 
+    /**
+     * @param EventPayment $payment
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deletePayment(EventPayment $payment)
+    {
+        $payment->softDelete();
+
+        return back()->with('Success', 'Pago eliminado');
+    }
+
+    /**
+     * Soft delete social event
+     * @param SocialEvent $event
+     * @return bool
+     */
+    public function softDelete(SocialEvent $event)
+    {
+        $event->status = 0;
+        $event->save();
+
+        return true;
+    }
+
 
     /**
      * @param Request $request
@@ -61,6 +99,12 @@ class SocialEventController extends Controller
      */
     public function registerPayment(Request $request, SocialEvent $event)
     {
+
+        if($request->diners_quantity > ($event->diners - $event->getCountOfPayedDishes()))
+        {
+            return back()->with('Errors', 'No puede registrar un pago que supere la cantidad de platos totales o por pagar');
+        }
+
         $payment = new EventPayment();
         $payment->social_event_id = $event->id;
         $payment->payment = $event->menu->precio * $request->diners_quantity;

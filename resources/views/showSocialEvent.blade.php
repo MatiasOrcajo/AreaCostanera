@@ -19,6 +19,12 @@
         </div>
     @endif
 
+    @if (session()->has('Errors'))
+        <div class="alert alert-danger">
+            {{session()->get('Errors')}}
+        </div>
+    @endif
+
     @if(session()->has('Success'))
         <div class="alert alert-success">
             {{ session()->get('Success') }}
@@ -26,7 +32,7 @@
     @endif
 
     <!-- Button trigger modal -->
-    @if(!$event->discount)
+    @if($event->discount == 0.0 || $event->discount == 0 || isset($event->payments))
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDiscount">
             Añadir descuento
         </button>
@@ -43,21 +49,34 @@
     <button id="eliminarEvento" type="button" class="btn btn-danger">
         Eliminar
     </button>
-    <h2 class="d-block mt-3">Información del evento:</h2>
+
     <br>
-    @if(isset($event->discount))
-        <h4 onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un
-            descuento especial de {{$event->discount}}%</h4>
-    @endif
 
 {{--    Informacion del evento--}}
-    <h4>Fecha del evento: {{$event->getFormatedDate()}}</h4>
-    <h4>Menú: {{$event->menu->nombre}}</h4>
-    <h4>Cantidad de comensales: {{$event->diners}}</h4>
-    <h4>Platos pagos: {{$event->getCountOfPayedDishes()}}</h4>
-    <h4>Platos por pagar: {{$event->diners - $event->getCountOfPayedDishes()}}</h4>
-    <h4>Total pago: ${{$event->getAmountOfPayments()}}</h4>
-    <h4>Total pendiente: ${{$event->total}}</h4>
+    <div class="row">
+        <div class="d-flex">
+            <div class="col-8">
+                <h2 class="d-block mt-3">Información del evento:</h2>
+                @if($event->discount !== 0.0)
+                    <h5 onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un
+                        descuento especial de {{$event->discount}}%</h5>
+                @endif
+                <h4>Fecha del evento: {{$event->getFormatedDate()}}</h4>
+                <h4>Menú: {{$event->menu->nombre}}</h4>
+                <h4>Cantidad de comensales: {{$event->diners}}</h4>
+                <h4>Platos pagos: {{$event->getCountOfPayedDishes()}}</h4>
+                <h4>Platos por pagar: {{$event->diners - $event->getCountOfPayedDishes()}}</h4>
+                <h4>Total pago: ${{$event->getAmountOfPayments()}}</h4>
+                <h4>Total pendiente: ${{$event->total}}</h4>
+            </div>
+            <div class="col-4">
+                <h2 class="d-block mt-3">Historial de pagos:</h2>
+                @foreach($event->payments as $payment)
+                    <h6 style="margin: 0; color: blue; cursor: pointer" onclick="deshacerPago({{$payment->id}})">{{\Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}} | {{$payment->diners_quantity}} platos | ${{$payment->payment}}</h6>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
 
     <!-- Modal -->
@@ -107,7 +126,7 @@
                         <div class="mb-3">
                             <label for="diners_quantity" class="form-label">Cantidad de platos a pagar:</label>
                             <br>
-                            <small>Precio unitario por plato: <strong>${{$event->menu->precio}}</strong></small>
+                            <small style="color: red">Precio unitario por plato: <strong>${{$event->menu->precio}}</strong></small>
                             <input type="number" class="form-control"
                                    id="diners_quantity" name="diners_quantity">
                         </div>
@@ -138,22 +157,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="create_graduate_party" action="{{route('edit.graduate', $event->id)}}" method="POST">
+                    <form id="edit_social_event" action="{{route('edit.social.event', $event->id)}}" method="POST">
                         @csrf
                         @method("PUT")
                         <div class="mb-3">
-                            <label for="escuela_id" class="form-label">Nombre</label>
+                            <label for="name" class="form-label">Nombre</label>
                             <input value="{{$event->name}}" type="text" class="form-control" id="name" name="name">
                         </div>
                         <div class="mb-3">
-                            <label for="cantidad_egresados" class="form-label">Cantidad de comensales</label>
+                            <label for="diners" class="form-label">Cantidad de comensales</label>
                             <input value="{{$event->diners}}" type="number" class="form-control"
-                                   id="cantidad_egresados" name="cantidad_egresados">
+                                   id="diners" name="diners">
                         </div>
                         <div class="mb-3">
                             <label for="fecha" class="form-label">Fecha del evento</label>
-                            <input name="fecha" type="date" class="form-control" id="fecha">
-                            <small style="color: red">Volver a elegir la fecha</small>
+                            <input name="fecha" value="{{\Carbon\Carbon::parse($event->fecha)->format('Y-m-d')}}" type="date" class="form-control" id="fecha">
                         </div>
                         <div class="mb-3">
                             <label for="menu_id" class="form-label">Menú elegido:</label>
@@ -220,5 +238,104 @@
         function editDiscount() {
             $("#editDiscount").modal('show');
         }
+
+
+        function deshacerPago(id) {
+            swal.fire({
+                title: '<h1>¿Deseas deshacer este pago?</h1>',
+                icon: 'question',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                    'Si',
+                cancelButtonText:
+                    'No',
+            })
+                .then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/delete-payment/social-event/${id}`,
+                            method: "POST",
+                            datatype: "json",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    // title: 'Oops...',
+                                    confirmButtonText:
+                                        '<button id="delete_button" class="btn w-100 h-100">OK</button>',
+                                    title: '<h1>Cambios confirmados</h1>',
+                                    // footer: '<a href="">Why do I have this issue?</a>'
+                                })
+                                    .then(function () {
+                                        location.reload();
+                                    })
+
+                            },
+                        })
+                    } else if (result.isDenied) {
+                        Swal.fire('No se registró ningún cambio', '', 'info')
+                    }
+                })
+
+        }
+
+        $('#eliminarEvento').on('click', function () {
+            swal.fire({
+                title: '<h1>¿Seguro que deseas eliminar el evento? Los cambios no podran deshacerse</h1>',
+                icon: 'question',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                    'Si',
+                cancelButtonText:
+                    'No',
+            })
+                .then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let route = '{{route('deleteSocialEvent', $event->id)}}';
+                        let id = {{$event->id}};
+                        $.ajax({
+                            url: route,
+                            type: "delete",
+                            datatype: "json",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id: id,
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    // title: 'Oops...',
+                                    confirmButtonText:
+                                        '<button id="delete_button" onclick="history.back()" class="btn w-100 h-100">OK</button>',
+                                    title: '<h1>Evento eliminado</h1>',
+                                    // footer: '<a href="">Why do I have this issue?</a>'
+                                })
+                                    .then(function () {
+                                        let route = "{{route('dashboard')}}"
+                                        location.replace(route)
+                                    })
+                            },
+                            error: function (err){
+                                console.log(err)
+                            }
+                        })
+                    } else if (result.isDenied) {
+                        Swal.fire('No se eliminó ningún egresado', '', 'info')
+                    }
+                })
+        })
+
+
+
+
+
     </script>
 @stop

@@ -17,7 +17,7 @@ class CreateEventsPaymentsTable extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\SocialEvent::class, 'social_event_id');
             $table->unsignedBigInteger('diners_quantity');
-            $table->unsignedFloat('payment');
+            $table->unsignedBigInteger('payment');
             $table->timestamps();
         });
     }

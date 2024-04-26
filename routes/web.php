@@ -166,8 +166,11 @@ Route::group(['middleware' => 'auth'], function(){
          */
         Route::get('evento/social/{event}', [\App\Http\Controllers\SocialEventController::class, 'show'])->name('show.social.event');
         Route::post('add-discount/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerDiscount'])->name('social.event.add.discount');
-        Route::put('edit-discount/{event}', [\App\Http\Controllers\SocialEventController::class, 'editDiscount'])->name('social.event.edit.discount');
+        Route::put('edit-discount/social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'editDiscount'])->name('social.event.edit.discount');
         Route::post('register-payment/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerPayment'])->name('social.event.register.payment');
+        Route::post('delete-payment/social-event/{payment}', [\App\Http\Controllers\SocialEventController::class, 'deletePayment']);
+        Route::delete('delete-social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'softDelete'])->name('deleteSocialEvent');
+        Route::put('edit-social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'edit'])->name('edit.social.event');
 
 
 
