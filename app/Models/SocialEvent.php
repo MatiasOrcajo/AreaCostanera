@@ -38,7 +38,7 @@ class SocialEvent extends Model
      */
     public function updateTotalForPayment($quantity): void
     {
-        $this->total = $this->total - ($quantity * $this->menu->precio);
+        $this->total = $this->total - ($quantity * $this->returnMenuPriceWithDiscounts());
         $this->save();
 
         if($this->total <= 0)
@@ -53,7 +53,7 @@ class SocialEvent extends Model
      */
     public function updateTotalForDiscount()
     {
-        $originalPrice = $this->diners * $this->menu->precio;
+        $originalPrice = $this->diners * $this->returnMenuPriceWithDiscounts();
         $this->total = ($originalPrice) - (($originalPrice * $this->discount) / 100);
         $this->save();
     }
@@ -64,8 +64,10 @@ class SocialEvent extends Model
      */
     public function updateTotalWhenEventIsEdited($oldDinersValue)
     {
-        $diferencia = $this->diners - $oldDinersValue;
-        $this->total = $this->total + $diferencia;
+        $dinersAlreadyPaid = $this->getAmountOfPayments();
+        $this->total = ($this->diners * $this->returnMenuPriceWithDiscounts()) - $dinersAlreadyPaid;
+//        $diferencia = $this->diners - $oldDinersValue;
+//        $this->total = $this->total + $diferencia;
         $this->save();
     }
 
@@ -75,7 +77,11 @@ class SocialEvent extends Model
      */
     public function updateTotalForNewDishPrice(): void
     {
-        $this->total = $this->total + (($this->diners - $this->getCountOfPayedDishes()) * $this->menu->precio);
+        $payedDishes = $this->getCountOfPayedDishes();
+        $dishesDiff = $this->diners - $payedDishes;
+        $newTotal = $this->returnMenuPriceWithDiscounts() * $dishesDiff;
+
+        $this->total = $newTotal;
         $this->save();
     }
 
@@ -107,4 +113,28 @@ class SocialEvent extends Model
     {
         return array_sum($this->payments->pluck('diners_quantity')->toArray());
     }
+
+
+    /**
+     * Get discount by q of diners
+     * @return DinersQuantityDiscount[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
+    public function getDiscountByDiners()
+    {
+        $discount = 0;
+
+        DinersQuantityDiscount::all()
+            ->map(function ($query) use(&$discount){
+               if($this->diners >= $query->from && $this->diners <= $query->to)
+                   $discount = $query->discount;
+            });
+
+        return $discount;
+    }
+
+    public function returnMenuPriceWithDiscounts()
+    {
+        return $this->menu->precio - (($this->menu->precio * $this->getDiscountByDiners()) / 100);
+    }
+
 }

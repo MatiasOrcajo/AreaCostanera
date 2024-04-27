@@ -87,8 +87,14 @@ class MenuController extends Controller
         $historyRecord->message     = $menu->precio;
         $historyRecord->message2    = $request->precio;
         $historyRecord->save();
-
         $menu->update($request->toArray());
+
+        //Update social events total price
+        if(isset($menu->socialEvents)){
+            $menu->socialEvents->map(function ($socialEvent){
+               $socialEvent->updateTotalForNewDishPrice();
+            });
+        }
 
         UserController::history('Editó el menú ID '. $menu->id . ' <br>' . $beforeEditMenu. '<br>'.
             'Versión nueva: '. $menu->nombre.

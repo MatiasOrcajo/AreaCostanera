@@ -26,4 +26,10 @@ class Menu extends Model
             if(in_array($category, $name)) return $menu;
         });
     }
+
+
+    public function socialEvents()
+    {
+        return $this->hasMany(SocialEvent::class, 'menu_id');
+    }
 }

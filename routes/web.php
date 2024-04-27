@@ -165,12 +165,27 @@ Route::group(['middleware' => 'auth'], function(){
          * Eventos sociales
          */
         Route::get('evento/social/{event}', [\App\Http\Controllers\SocialEventController::class, 'show'])->name('show.social.event');
+
         Route::post('add-discount/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerDiscount'])->name('social.event.add.discount');
+
         Route::put('edit-discount/social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'editDiscount'])->name('social.event.edit.discount');
+
         Route::post('register-payment/{event}', [\App\Http\Controllers\SocialEventController::class, 'registerPayment'])->name('social.event.register.payment');
+
         Route::post('delete-payment/social-event/{payment}', [\App\Http\Controllers\SocialEventController::class, 'deletePayment']);
+
         Route::delete('delete-social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'softDelete'])->name('deleteSocialEvent');
+
         Route::put('edit-social-event/{event}', [\App\Http\Controllers\SocialEventController::class, 'edit'])->name('edit.social.event');
+
+        Route::get('descuentos-eventos-sociales', [\App\Http\Controllers\SocialEventController::class, 'dashboardDinersQuantityDiscount'])->name('social.event.dashboard.diners.quantity.discount');
+
+        Route::post('create-diners-quantity-discount', [\App\Http\Controllers\SocialEventController::class, 'createDinersQuantityDiscount'])->name('social.event.create.diners.quantity.discount');
+
+        Route::put('edit-diners-quantity-discount/{discount}', [\App\Http\Controllers\SocialEventController::class, 'editDinersQuantityDiscount'])->name('social.event.edit.diners.quantity.discount');
+
+
+        Route::get('get/diners-quantity-discounts', [\App\Http\Controllers\SocialEventController::class, 'listDinersQuantityDiscounts'])->name('list.social.event.dashboard.diners.quantity.discount');
 
 
 

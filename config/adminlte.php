@@ -404,6 +404,11 @@ return [
                     'icon' => 'fa-solid fa-percent',
                     'url'  => '/admin/descuentos-egresados',
                 ],
+                [
+                    'text' => 'Editar Descuentos Sociales',
+                    'icon' => 'fa-solid fa-percent',
+                    'url'  => '/admin/descuentos-eventos-sociales',
+                ],
 
 //                <i class=""></i>
             ],

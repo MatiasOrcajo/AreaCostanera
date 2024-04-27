@@ -57,6 +57,7 @@
         <div class="d-flex">
             <div class="col-8">
                 <h2 class="d-block mt-3">Información del evento:</h2>
+                <h5 class="d-block mb-3" style="color: blue;">Descuento por cantidad de comensales de {{$event->getDiscountByDiners()}}%</h5>
                 @if($event->discount !== 0.0)
                     <h5 onclick="editDiscount()" class="d-block mb-3" style="color: blue; cursor: pointer">El evento tiene un
                         descuento especial de {{$event->discount}}%</h5>
@@ -126,7 +127,7 @@
                         <div class="mb-3">
                             <label for="diners_quantity" class="form-label">Cantidad de platos a pagar:</label>
                             <br>
-                            <small style="color: red">Precio unitario por plato: <strong>${{$event->menu->precio}}</strong></small>
+                            <small style="color: red">Precio unitario por plato: <strong>${{$event->returnMenuPriceWithDiscounts()}}</strong></small>
                             <input type="number" class="form-control"
                                    id="diners_quantity" name="diners_quantity">
                         </div>
@@ -211,6 +212,10 @@
 
                         <div class="mb-3" id="discount">
                             <label for="discount" class="form-label">Descuento:</label>
+                            <br>
+                            <small style="color: red">Atención: el descuento es por sobre el menú unitario con el descuento por cantidad de comensales ya aplicado</small>
+                            <br>
+                            <small><strong>total = valor plato con descuento de cantidad de comensales - descuento especial</strong></small>
                             <input type="number" step="0.01" class="form-control" name="discount">
                         </div>
 
