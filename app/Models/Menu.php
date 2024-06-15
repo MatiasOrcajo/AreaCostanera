@@ -12,7 +12,7 @@ class Menu extends Model
 
     public function historyRecords()
     {
-        return $this->hasMany(HistoryRecord::class, 'specific_id')->where('application', Constants::MENU);
+        return $this->hasMany(HistoryRecord::class, 'specific_id')->where('application', Constants::MENU)->orderBy('created_at', 'ASC');
     }
 
     /**

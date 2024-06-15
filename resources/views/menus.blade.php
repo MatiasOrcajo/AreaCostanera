@@ -1,7 +1,7 @@
 @extends('appAdmin')
 @extends('adminlte::page')
 
-@section('title', 'Grupos de días')
+@section('title', 'Menús')
 
 @section('content_header')
     <h1>Menús</h1>
@@ -155,6 +155,7 @@
                 "paging": true,
                 stateSave: true,
                 "processing": true,
+                "ordering": false,
                 "ajax": url,
                 columnDefs: [{
                     "defaultContent": "-",
